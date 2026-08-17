@@ -41,18 +41,6 @@ let lastKnownAttendanceIds = new Set();
 let isRegistering = false;
 
 
-/* =========================================================
-   LOGIN CHECK
-   ========================================================= */
-
-const isLoggedIn = localStorage.getItem("loggedIn");
-
-if (isLoggedIn !== "true") {
-
-    window.location.href = "Login.html";
-
-}
-
 
 /* =========================================================
    DEFAULT STUDENT IMAGE
@@ -1953,47 +1941,43 @@ window.registerStudent =
 
 /* =========================================================
    LOGOUT
-   ========================================================= */
+========================================================= */
 
-window.logout =
-    function () {
+window.logout = async function () {
 
-        localStorage.removeItem(
-            "loggedIn"
-        );
-
-
-        /*
-         * Supabase authentication is optional.
-         * Your current project primarily uses
-         * localStorage login.
-         */
+    try {
 
         if (
-            typeof sb !== "undefined" &&
-            sb.auth &&
-            typeof sb.auth.signOut === "function"
+            typeof window.sb !== "undefined" &&
+            window.sb.auth &&
+            typeof window.sb.auth.signOut === "function"
         ) {
 
-            sb.auth.signOut()
-                .catch(
-                    function (error) {
+            const { error } =
+                await window.sb.auth.signOut();
 
-                        console.warn(
-                            "Supabase logout warning:",
-                            error
-                        );
-
-                    }
-                );
+            if (error) {
+                throw error;
+            }
 
         }
 
+    } catch (error) {
 
-        window.location.href =
-            "Login.html";
+        console.error(
+            "Supabase logout error:",
+            error
+        );
 
-    };
+    } finally {
+
+        window.location.replace(
+            "Login.html"
+        );
+
+    }
+
+};
 
 
 /* =========================================================
