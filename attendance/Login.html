@@ -3,307 +3,501 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AMACC Login</title>
+
+<title>AMACC Attendance Login</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+>
 
 <style>
 
-:root{
-    --maroon:#8b000f;
-    --maroon-deep:#6d000c;
-    --maroon-bright:#c1121f;
-    --gold:#ffd54f;
-    --gold-deep:#e8b923;
-    --ink:#1e293b;
-    --muted:#64748b;
-    --line:#e2e8f0;
-    --ok:#16a34a;
-    --bad:#b91c1c;
-    --radius-sm:4px;
-    --radius-md:6px;
+:root {
+    --maroon: #8b000f;
+    --maroon-deep: #6d000c;
+    --maroon-bright: #c1121f;
+    --gold: #ffd54f;
+    --gold-deep: #e8b923;
+    --ink: #1e293b;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --ok: #16a34a;
+    --bad: #b91c1c;
+    --radius-sm: 4px;
+    --radius-md: 6px;
 }
 
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'IBM Plex Sans', Arial, Helvetica, sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'IBM Plex Sans', Arial, Helvetica, sans-serif;
 }
 
-.top-section p, .eyebrow, .form-group label, .form-eyebrow{
-    font-family:'IBM Plex Mono', 'Courier New', monospace;
+.top-section p,
+.eyebrow,
+.form-group label,
+.form-eyebrow {
+    font-family: 'IBM Plex Mono', 'Courier New', monospace;
 }
 
-body{
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    overflow:hidden;
-    padding:20px;
-    position:relative;
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+    padding: 20px;
+    position: relative;
 
     background:
-    linear-gradient(
-    160deg,
-    rgba(109,0,12,0.96),
-    rgba(139,0,15,0.94) 55%,
-    rgba(90,0,10,0.97)
-    );
+        linear-gradient(
+            160deg,
+            rgba(109, 0, 12, 0.96),
+            rgba(139, 0, 15, 0.94) 55%,
+            rgba(90, 0, 10, 0.97)
+        );
 }
 
 /* ===== TECHNICAL GRID OVERLAY ===== */
 
-body::before{
-    content:"";
-    position:absolute;
-    inset:0;
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+
     background-image:
-        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
-    background-size:36px 36px;
-    pointer-events:none;
+        linear-gradient(
+            rgba(255, 255, 255, 0.035) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.035) 1px,
+            transparent 1px
+        );
+
+    background-size: 36px 36px;
+    pointer-events: none;
 }
 
-body::after{
-    content:"";
-    position:absolute;
-    width:480px;
-    height:480px;
-    background:rgba(255,213,79,0.05);
-    border-radius:50%;
-    top:-180px;
-    right:-160px;
-    filter:blur(30px);
-    pointer-events:none;
+body::after {
+    content: "";
+    position: fixed;
+
+    width: 480px;
+    height: 480px;
+
+    background: rgba(255, 213, 79, 0.05);
+    border-radius: 50%;
+
+    top: -180px;
+    right: -160px;
+
+    filter: blur(30px);
+    pointer-events: none;
 }
 
 /* ===== LOGIN CARD ===== */
 
-.login-card{
-    width:100%;
-    max-width:420px;
-    position:relative;
-    z-index:2;
-    border-radius:var(--radius-md);
-    overflow:hidden;
-    background:rgba(255,255,255,0.07);
-    backdrop-filter:blur(20px);
-    border:1px solid rgba(255,255,255,0.16);
-    border-top:2px solid var(--gold);
-    box-shadow:0 20px 50px rgba(0,0,0,0.35);
-    animation:fadeIn 0.5s ease;
+.login-card {
+    width: 100%;
+    max-width: 420px;
+
+    position: relative;
+    z-index: 2;
+
+    border-radius: var(--radius-md);
+    overflow: hidden;
+
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(20px);
+
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-top: 2px solid var(--gold);
+
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+
+    animation: fadeIn 0.5s ease;
 }
 
-@keyframes fadeIn{
-    from{ opacity:0; transform:translateY(16px); }
-    to{ opacity:1; transform:translateY(0); }
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ===== TOP SECTION ===== */
 
-.top-section{
-    padding:34px 28px 22px;
-    text-align:center;
-    color:white;
+.top-section {
+    padding: 34px 28px 22px;
+    text-align: center;
+    color: white;
 }
 
-.eyebrow{
-    display:inline-flex;
-    align-items:center;
-    gap:7px;
-    font-size:10.5px;
-    letter-spacing:2px;
-    text-transform:uppercase;
-    color:var(--gold);
-    font-weight:600;
-    margin-bottom:18px;
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 7px;
+
+    font-size: 10.5px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+
+    color: var(--gold);
+    font-weight: 600;
+
+    margin-bottom: 18px;
 }
 
-.eyebrow .dot{
-    width:6px;
-    height:6px;
-    border-radius:50%;
-    background:var(--ok);
-    box-shadow:0 0 0 3px rgba(22,163,74,0.2);
-    animation:pulse 2s infinite;
+.eyebrow .dot {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+
+    background: var(--ok);
+
+    box-shadow:
+        0 0 0 3px rgba(22, 163, 74, 0.2);
+
+    animation: pulse 2s infinite;
 }
 
-@keyframes pulse{
-    0%,100%{ opacity:1; }
-    50%{ opacity:0.4; }
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.4;
+    }
 }
 
-.logo-circle{
-    width:112px;
-    height:112px;
-    background:white;
-    border-radius:var(--radius-md);
-    margin:auto;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    box-shadow:0 8px 24px rgba(0,0,0,0.3);
-    border:1px solid rgba(0,0,0,0.08);
+.logo-circle {
+    width: 112px;
+    height: 112px;
+
+    background: white;
+
+    border-radius: var(--radius-md);
+
+    margin: auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.3);
+
+    border: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-.logo-circle img{
-    width:78px;
-    object-fit:contain;
+.logo-circle img {
+    width: 78px;
+    max-height: 90px;
+    object-fit: contain;
 }
 
-.top-section h1{
-    margin-top:18px;
-    font-size:24px;
-    font-weight:700;
-    letter-spacing:-0.3px;
+.top-section h1 {
+    margin-top: 18px;
+
+    font-size: 24px;
+    font-weight: 700;
+
+    letter-spacing: -0.3px;
 }
 
-.top-section p{
-    margin-top:8px;
-    font-size:11px;
-    letter-spacing:2px;
-    color:rgba(255,255,255,0.65);
+.top-section p {
+    margin-top: 8px;
+
+    font-size: 11px;
+    letter-spacing: 2px;
+
+    color: rgba(255, 255, 255, 0.65);
 }
 
 /* ===== FORM ===== */
 
-.form-section{
-    background:#ffffff;
-    padding:32px 30px 30px;
-    border-top:1px solid var(--line);
+.form-section {
+    background: #ffffff;
+
+    padding: 32px 30px 30px;
+
+    border-top: 1px solid var(--line);
 }
 
-.form-section h2{
-    text-align:center;
-    color:var(--ink);
-    margin-bottom:6px;
-    font-size:20px;
-    font-weight:700;
-    text-transform:uppercase;
-    letter-spacing:1px;
+.form-section h2 {
+    text-align: center;
+
+    color: var(--ink);
+
+    margin-bottom: 6px;
+
+    font-size: 20px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-.form-eyebrow{
-    text-align:center;
-    color:var(--muted);
-    font-size:11px;
-    letter-spacing:1px;
-    margin-bottom:22px;
-    padding-bottom:18px;
-    border-bottom:1px solid var(--line);
+.form-eyebrow {
+    text-align: center;
+
+    color: var(--muted);
+
+    font-size: 11px;
+    letter-spacing: 1px;
+
+    margin-bottom: 22px;
+
+    padding-bottom: 18px;
+
+    border-bottom: 1px solid var(--line);
 }
 
-.form-group{
-    margin-bottom:16px;
+.form-group {
+    margin-bottom: 16px;
 }
 
-.form-group label{
-    display:block;
-    margin-bottom:7px;
-    color:var(--maroon);
-    font-size:10.5px;
-    font-weight:600;
-    letter-spacing:1px;
-    text-transform:uppercase;
+.form-group label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--maroon);
+
+    font-size: 10.5px;
+    font-weight: 600;
+
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
-.form-group input{
-    width:100%;
-    padding:13px 14px;
-    border:1px solid var(--line);
-    border-radius:var(--radius-sm);
-    outline:none;
-    background:#f8fafc;
-    color:var(--ink);
-    font-size:14px;
-    transition:0.15s ease;
+.form-group input {
+    width: 100%;
+
+    padding: 13px 14px;
+
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+
+    outline: none;
+
+    background: #f8fafc;
+
+    color: var(--ink);
+
+    font-size: 14px;
+
+    transition: 0.15s ease;
 }
 
-.form-group input::placeholder{
-    color:#a3adba;
+.form-group input::placeholder {
+    color: #a3adba;
 }
 
-.form-group input:focus{
-    border-color:var(--maroon);
-    box-shadow:0 0 0 3px rgba(139,0,15,0.1);
-    background:white;
+.form-group input:focus {
+    border-color: var(--maroon);
+
+    box-shadow:
+        0 0 0 3px rgba(139, 0, 15, 0.1);
+
+    background: white;
 }
 
-/* ===== PASSWORD FIELD WITH TOGGLE ===== */
+/* ===== PASSWORD ===== */
 
-.password-field{
-    position:relative;
+.password-field {
+    position: relative;
 }
 
-.password-field input{
-    padding-right:52px;
+.password-field input {
+    padding-right: 62px;
 }
 
-.toggle-password{
-    position:absolute;
-    right:10px;
-    top:50%;
-    transform:translateY(-50%);
-    cursor:pointer;
-    font-size:10.5px;
-    font-family:'IBM Plex Mono', monospace;
-    font-weight:700;
-    letter-spacing:0.5px;
-    text-transform:uppercase;
-    color:var(--maroon);
-    user-select:none;
-    background:#fdf0f1;
-    border:1px solid rgba(139,0,15,0.2);
-    padding:4px 8px;
-    border-radius:3px;
+.toggle-password {
+    position: absolute;
+
+    right: 10px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    cursor: pointer;
+
+    font-size: 10.5px;
+
+    font-family:
+        'IBM Plex Mono',
+        monospace;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+
+    color: var(--maroon);
+
+    user-select: none;
+
+    background: #fdf0f1;
+
+    border:
+        1px solid rgba(139, 0, 15, 0.2);
+
+    padding: 4px 8px;
+
+    border-radius: 3px;
 }
 
-/* ===== BUTTON ===== */
+/* ===== ERROR MESSAGE ===== */
 
-.login-btn{
-    width:100%;
-    padding:14px;
-    border:1px solid var(--maroon-deep);
-    border-radius:var(--radius-sm);
-    background:var(--maroon);
-    color:white;
-    font-family:'IBM Plex Mono', monospace;
-    font-size:13px;
-    font-weight:700;
-    letter-spacing:1px;
-    text-transform:uppercase;
-    cursor:pointer;
-    margin-top:8px;
-    transition:0.15s ease;
+.message {
+    display: none;
+
+    margin-bottom: 14px;
+
+    padding: 11px 12px;
+
+    border-radius: var(--radius-sm);
+
+    font-size: 12px;
+    line-height: 1.4;
 }
 
-.login-btn:hover{
-    background:var(--maroon-bright);
+.message.error {
+    display: block;
+
+    color: #991b1b;
+
+    background: #fef2f2;
+
+    border: 1px solid #fecaca;
 }
 
-.login-btn:active{
-    transform:translateY(1px);
+.message.success {
+    display: block;
+
+    color: #166534;
+
+    background: #f0fdf4;
+
+    border: 1px solid #bbf7d0;
+}
+
+/* ===== LOGIN BUTTON ===== */
+
+.login-btn {
+    width: 100%;
+
+    padding: 14px;
+
+    border:
+        1px solid var(--maroon-deep);
+
+    border-radius:
+        var(--radius-sm);
+
+    background:
+        var(--maroon);
+
+    color: white;
+
+    font-family:
+        'IBM Plex Mono',
+        monospace;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+    cursor: pointer;
+
+    margin-top: 8px;
+
+    transition: 0.15s ease;
+}
+
+.login-btn:hover:not(:disabled) {
+    background:
+        var(--maroon-bright);
+}
+
+.login-btn:active:not(:disabled) {
+    transform:
+        translateY(1px);
+}
+
+.login-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+/* ===== FOOTER ===== */
+
+.login-footer {
+    text-align: center;
+
+    margin-top: 20px;
+
+    padding-top: 18px;
+
+    border-top: 1px solid var(--line);
+
+    color: var(--muted);
+
+    font-size: 11px;
 }
 
 /* ===== RESPONSIVE ===== */
 
-@media(max-width:500px){
+@media (max-width: 500px) {
 
-    .form-section{
-        padding:26px 22px;
+    body {
+        padding: 12px;
     }
 
-    .top-section h1{
-        font-size:21px;
+    .form-section {
+        padding: 26px 22px;
     }
 
-    .form-section h2{
-        font-size:18px;
+    .top-section {
+        padding:
+            28px 20px 20px;
     }
 
+    .top-section h1 {
+        font-size: 21px;
+    }
+
+    .form-section h2 {
+        font-size: 18px;
+    }
+
+    .logo-circle {
+        width: 96px;
+        height: 96px;
+    }
+
+    .logo-circle img {
+        width: 68px;
+    }
 }
 
 </style>
@@ -313,15 +507,21 @@ body::after{
 
 <div class="login-card">
 
-    <!-- ===== TOP ===== -->
+    <!-- ===== HEADER ===== -->
 
     <div class="top-section">
 
-        <div class="eyebrow"><span class="dot"></span>SECURE ACCESS</div>
+        <div class="eyebrow">
+            <span class="dot"></span>
+            SECURE ACCESS
+        </div>
 
         <div class="logo-circle">
 
-            <img src="AMA logo.png" alt="AMA Computer College Logo">
+            <img
+                src="AMA logo.png"
+                alt="AMA Computer College Logo"
+            >
 
         </div>
 
@@ -335,48 +535,74 @@ body::after{
 
     </div>
 
-    <!-- ===== FORM ===== -->
+
+    <!-- ===== LOGIN FORM ===== -->
 
     <div class="form-section">
 
         <h2>
             Security Login
         </h2>
-        <div class="form-eyebrow">// authenticate to continue</div>
+
+        <div class="form-eyebrow">
+            // authenticate to continue
+        </div>
+
+
+        <div
+            id="loginMessage"
+            class="message"
+            role="alert"
+        ></div>
+
 
         <form id="loginForm">
 
+            <!-- EMAIL -->
+
             <div class="form-group">
 
-                <label>
-                    User Number (USN)
+                <label for="email">
+                    Email
                 </label>
 
                 <input
-                type="text"
-                id="username"
-                placeholder="Enter User Number"
-                required>
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter Email Address"
+                    autocomplete="email"
+                    required
+                >
 
             </div>
 
+
+            <!-- PASSWORD -->
+
             <div class="form-group">
 
-                <label>
+                <label for="password">
                     Password
                 </label>
 
                 <div class="password-field">
 
                     <input
-                    type="password"
-                    id="password"
-                    placeholder="Enter Password"
-                    required>
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter Password"
+                        autocomplete="current-password"
+                        required
+                    >
 
-                    <span class="toggle-password"
-                    id="passwordToggle"
-                    onclick="togglePassword('password','passwordToggle')">
+                    <span
+                        class="toggle-password"
+                        id="passwordToggle"
+                        role="button"
+                        tabindex="0"
+                    >
                         Show
                     </span>
 
@@ -384,84 +610,434 @@ body::after{
 
             </div>
 
+
+            <!-- LOGIN -->
+
             <button
-            type="submit"
-            class="login-btn">
-
+                type="submit"
+                class="login-btn"
+                id="loginButton"
+            >
                 Login
-
             </button>
 
         </form>
+
+
+        <div class="login-footer">
+            AMACC Lipa Smart Attendance System
+        </div>
 
     </div>
 
 </div>
 
+
+<!-- ===================================================
+     SUPABASE JAVASCRIPT LIBRARY
+=================================================== -->
+
+<script
+src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
+
 <script>
 
-/* ===== SHOW / HIDE PASSWORD ===== */
+/* =====================================================
+   SUPABASE CONFIGURATION
+===================================================== */
 
-function togglePassword(inputId, toggleId){
+const SUPABASE_URL =
+    "https://sxmqqklyfeyegmlepwbx.supabase.co";
 
-    const input = document.getElementById(inputId);
-    const toggle = document.getElementById(toggleId);
+const SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_hVHVwb5OeYAI_rUMAq-YIw_dfQJSpvO";
 
-    if(input.type === "password"){
 
-        input.type = "text";
-        toggle.innerText = "Hide";
+/* =====================================================
+   CREATE SUPABASE CLIENT
+===================================================== */
+
+const sb =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY,
+        {
+            auth: {
+
+                persistSession: true,
+
+                autoRefreshToken: true,
+
+                detectSessionInUrl: true
+
+            }
+        }
+    );
+
+
+/* =====================================================
+   ELEMENTS
+===================================================== */
+
+const loginForm =
+    document.getElementById(
+        "loginForm"
+    );
+
+const emailInput =
+    document.getElementById(
+        "email"
+    );
+
+const passwordInput =
+    document.getElementById(
+        "password"
+    );
+
+const loginButton =
+    document.getElementById(
+        "loginButton"
+    );
+
+const loginMessage =
+    document.getElementById(
+        "loginMessage"
+    );
+
+const passwordToggle =
+    document.getElementById(
+        "passwordToggle"
+    );
+
+
+/* =====================================================
+   SHOW MESSAGE
+===================================================== */
+
+function showMessage(
+    text,
+    type = "error"
+) {
+
+    loginMessage.textContent =
+        text;
+
+    loginMessage.className =
+        "message " + type;
+
+}
+
+
+/* =====================================================
+   CLEAR MESSAGE
+===================================================== */
+
+function clearMessage() {
+
+    loginMessage.textContent =
+        "";
+
+    loginMessage.className =
+        "message";
+
+}
+
+
+/* =====================================================
+   PASSWORD TOGGLE
+===================================================== */
+
+function togglePassword() {
+
+    if (
+        passwordInput.type ===
+        "password"
+    ) {
+
+        passwordInput.type =
+            "text";
+
+        passwordToggle.textContent =
+            "Hide";
 
     } else {
 
-        input.type = "password";
-        toggle.innerText = "Show";
+        passwordInput.type =
+            "password";
+
+        passwordToggle.textContent =
+            "Show";
 
     }
 
 }
 
-/* ===== LOGIN ===== */
 
-document.getElementById("loginForm")
-.addEventListener("submit", function(e){
+passwordToggle.addEventListener(
+    "click",
+    togglePassword
+);
 
-    e.preventDefault();
 
-    const username =
-    document.getElementById("username").value;
+passwordToggle.addEventListener(
+    "keydown",
+    function(event) {
 
-    const password =
-    document.getElementById("password").value;
+        if (
+            event.key === "Enter" ||
+            event.key === " "
+        ) {
 
-    /* SAMPLE LOGIN ACCOUNT */
+            event.preventDefault();
 
-    if(username === "admin" &&
-       password === "admin123"){
+            togglePassword();
 
-        /* SAVE LOGIN */
+        }
 
-        localStorage.setItem(
-        "loggedIn",
-        "true"
+    }
+);
+
+
+/* =====================================================
+   CHECK EXISTING SESSION
+
+   If already logged in,
+   open attendance system.
+===================================================== */
+
+async function checkExistingSession() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await sb.auth.getSession();
+
+
+        if (error) {
+
+            console.error(
+                "Session check error:",
+                error
+            );
+
+            return;
+
+        }
+
+
+        if (
+            data &&
+            data.session
+        ) {
+
+            window.location.replace(
+                "attendance.html"
+            );
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Session check failed:",
+            error
         );
-
-        /* OPEN ATTENDANCE PAGE */
-
-        window.location.href =
-        "Attendance.html";
 
     }
 
-    else{
+}
 
-        alert(
-        "Invalid User Number or Password"
-        );
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+loginForm.addEventListener(
+    "submit",
+    async function(event) {
+
+        event.preventDefault();
+
+        clearMessage();
+
+
+        const email =
+            emailInput.value
+            .trim()
+            .toLowerCase();
+
+
+        const password =
+            passwordInput.value;
+
+
+        if (
+            !email ||
+            !password
+        ) {
+
+            showMessage(
+                "Please enter your email and password."
+            );
+
+            return;
+
+        }
+
+
+        loginButton.disabled =
+            true;
+
+        loginButton.textContent =
+            "Authenticating...";
+
+
+        try {
+
+            const {
+                data,
+                error
+            } =
+                await sb.auth
+                .signInWithPassword({
+
+                    email: email,
+
+                    password: password
+
+                });
+
+
+            if (error) {
+
+                throw error;
+
+            }
+
+
+            if (
+                !data ||
+                !data.session
+            ) {
+
+                throw new Error(
+                    "Authentication session was not created."
+                );
+
+            }
+
+
+            showMessage(
+                "Login successful. Opening Attendance System...",
+                "success"
+            );
+
+
+            setTimeout(
+                function() {
+
+                    window.location.replace(
+                        "attendance.html"
+                    );
+
+                },
+                500
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Login error:",
+                error
+            );
+
+
+            let message =
+                "Invalid email or password.";
+
+
+            if (
+                error &&
+                error.message
+            ) {
+
+                const errorText =
+                    error.message
+                    .toLowerCase();
+
+
+                if (
+                    errorText.includes(
+                        "invalid login credentials"
+                    )
+                ) {
+
+                    message =
+                        "Invalid email or password.";
+
+                }
+
+                else if (
+                    errorText.includes(
+                        "email not confirmed"
+                    )
+                ) {
+
+                    message =
+                        "This account has not been confirmed yet.";
+
+                }
+
+                else if (
+                    errorText.includes(
+                        "failed to fetch"
+                    )
+                ) {
+
+                    message =
+                        "Unable to connect to the server. Check your internet connection.";
+
+                }
+
+            }
+
+
+            showMessage(
+                message,
+                "error"
+            );
+
+
+            passwordInput.value =
+                "";
+
+            passwordInput.focus();
+
+        } finally {
+
+            loginButton.disabled =
+                false;
+
+            loginButton.textContent =
+                "Login";
+
+        }
 
     }
+);
 
-});
+
+/* =====================================================
+   CHECK SESSION WHEN PAGE OPENS
+===================================================== */
+
+checkExistingSession();
 
 </script>
 
