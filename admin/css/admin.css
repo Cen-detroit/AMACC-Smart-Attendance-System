@@ -1,0 +1,1017 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+:root {
+    --ama-red: #680b0d;
+    --ama-red-dark: #520608;
+    --ama-red-light: #8b1114;
+    --ama-blue: #123b70;
+    --text: #142033;
+    --muted: #6b7280;
+    --border: #d9e0e8;
+    --background: #f4f6f8;
+    --white: #ffffff;
+    --success: #16803c;
+    --warning: #b7791f;
+    --danger: #b42318;
+}
+
+body {
+    font-family: "IBM Plex Sans", Arial, sans-serif;
+    background: var(--background);
+    color: var(--text);
+    min-height: 100vh;
+}
+
+button,
+input,
+select,
+textarea {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 228px;
+    height: 100vh;
+    background: var(--ama-red);
+    color: #fff;
+    padding: 20px 14px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.sidebar-logo {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    border-radius: 10px;
+}
+
+.sidebar-logo img {
+    width: 125px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.menu-title {
+    padding: 0 10px 12px;
+    color: #fff;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.menu-link {
+    width: 100%;
+    min-height: 42px;
+    margin-bottom: 5px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-radius: 10px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.menu-link:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.menu-link.active {
+    background: #fff;
+    color: var(--ama-red);
+}
+
+.menu-link .tag {
+    width: 25px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.menu-link .label {
+    flex: 1;
+}
+
+.menu-link.logout {
+    margin-top: auto;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    padding-top: 10px;
+}
+
+/* =========================================================
+   MAIN CONTENT
+========================================================= */
+
+.main {
+    margin-left: 228px;
+    min-height: 100vh;
+    padding: 28px;
+}
+
+#overviewSection,
+#studentsSection,
+#facultySection,
+#attendanceSection,
+#reportsSection,
+#settingsSection {
+    width: 100%;
+}
+
+/* =========================================================
+   TOPBAR
+========================================================= */
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+.header-title {
+    min-width: 0;
+}
+
+.eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--ama-red);
+}
+
+.eyebrow .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ama-red);
+}
+
+.header-title h1 {
+    font-size: 30px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #101828;
+}
+
+.header-title p {
+    margin-top: 7px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.top-right {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+}
+
+.datetime {
+    text-align: right;
+}
+
+.datetime div {
+    margin-bottom: 2px;
+}
+
+#currentDay {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+#currentDate {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+#currentTime {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--ama-red);
+}
+
+.profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.15);
+}
+
+.profile strong {
+    display: block;
+    font-size: 13px;
+    color: #172033;
+}
+
+.profile small {
+    display: block;
+    margin-top: 2px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+/* =========================================================
+   STATISTICS
+========================================================= */
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 15px;
+    margin-bottom: 22px;
+}
+
+.stat-card {
+    min-height: 120px;
+    padding: 20px;
+    border-radius: 14px;
+    background: #fff;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 8px rgba(16, 24, 40, 0.04);
+}
+
+.stat-card h3 {
+    margin-bottom: 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+.stat-card p {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 31px;
+    font-weight: 700;
+}
+
+.stat-card.red {
+    border-top: 4px solid var(--ama-red);
+}
+
+.stat-card.red p {
+    color: var(--ama-red);
+}
+
+.stat-card.dark {
+    border-top: 4px solid #1f2937;
+}
+
+.stat-card.dark p {
+    color: #1f2937;
+}
+
+.stat-card.blue {
+    border-top: 4px solid var(--ama-blue);
+}
+
+.stat-card.blue p {
+    color: var(--ama-blue);
+}
+
+/* =========================================================
+   CARDS
+========================================================= */
+
+.card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(16, 24, 40, 0.035);
+}
+
+.card h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    font-size: 18px;
+    color: #172033;
+}
+
+.card h2 .tag {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 30px;
+    height: 26px;
+    padding: 0 7px;
+    border-radius: 6px;
+    background: var(--ama-red);
+    color: #fff;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.card p {
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* =========================================================
+   RECENT STUDENTS
+========================================================= */
+
+.class-item {
+    padding: 14px;
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    margin-bottom: 8px;
+}
+
+.class-item strong {
+    font-size: 14px;
+}
+
+.class-item small {
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.activity-empty {
+    padding: 35px 15px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* =========================================================
+   TOOLBARS
+========================================================= */
+
+.student-toolbar,
+.attendance-toolbar {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.student-toolbar select,
+.attendance-toolbar select,
+.attendance-toolbar input {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #cfd7e1;
+    border-radius: 9px;
+    background: #fff;
+    color: #344054;
+    font-size: 13px;
+    outline: none;
+}
+
+.student-toolbar select:focus,
+.attendance-toolbar select:focus,
+.attendance-toolbar input:focus {
+    border-color: var(--ama-red);
+    box-shadow: 0 0 0 3px rgba(104, 11, 13, 0.08);
+}
+
+.btn-primary {
+    min-height: 42px;
+    padding: 0 17px;
+    border: 1px solid var(--ama-red);
+    border-radius: 9px;
+    background: var(--ama-red);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.btn-primary:hover {
+    background: var(--ama-red-dark);
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 2px 8px rgba(16, 24, 40, 0.035);
+    margin-bottom: 20px;
+}
+
+.table-wrapper table {
+    width: 100%;
+    min-width: 1050px;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.table-wrapper thead {
+    background: #f8fafc;
+}
+
+.table-wrapper th {
+    height: 48px;
+    padding: 0 12px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    color: #667085;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+.table-wrapper td {
+    height: 70px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #e9edf2;
+    color: #344054;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.table-wrapper tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.table-wrapper tbody tr:hover {
+    background: #fcfcfd;
+}
+
+/* =========================================================
+   STUDENT TABLE
+========================================================= */
+
+#studentsTable td:first-child {
+    width: 90px;
+    overflow: hidden;
+}
+
+#studentsTable td:nth-child(2) {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+}
+
+/* Force ANY image in the photo column to be constrained,
+   even if the .student-photo class is missing/misapplied
+   or an inline width/height attribute is present. */
+#studentsTable td:first-child img {
+    width: 52px !important;
+    height: 52px !important;
+    display: block;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 9px;
+    border: 1px solid #d7dde5;
+    background: #f2f4f7;
+}
+
+.student-photo {
+    width: 52px;
+    height: 52px;
+    display: block;
+    object-fit: cover;
+    border-radius: 9px;
+    border: 1px solid #d7dde5;
+    background: #f2f4f7;
+}
+
+.student-photo-placeholder {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: #f1f3f5;
+    border: 1px solid #d7dde5;
+    color: #98a2b3;
+    font-size: 10px;
+    text-align: center;
+}
+
+/* =========================================================
+   ACTION BUTTONS
+========================================================= */
+
+.action-group,
+.actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    white-space: nowrap;
+}
+
+.action-btn,
+.actions button {
+    height: 38px;
+    min-width: 60px;
+    padding: 0 13px;
+    border-radius: 8px;
+    background: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 36px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+/* EDIT */
+
+.action-edit,
+.btn-edit {
+    border: 1px solid #cfd7e1;
+    color: var(--ama-red);
+    background: #fff;
+}
+
+.action-edit:hover,
+.btn-edit:hover {
+    background: #f9eeee;
+    border-color: var(--ama-red);
+}
+
+/* DELETE */
+
+.action-delete,
+.btn-delete,
+.action-group button:last-child,
+.actions button:last-child {
+    border: 1px solid var(--danger);
+    color: #fff;
+    background: var(--danger);
+}
+
+.action-delete:hover,
+.btn-delete:hover,
+.action-group button:last-child:hover,
+.actions button:last-child:hover {
+    background: #8f1a11;
+    border-color: #8f1a11;
+    color: #fff;
+}
+
+.action-btn:active,
+.actions button:active {
+    transform: scale(0.97);
+}
+
+/* =========================================================
+   STATUS BADGES
+========================================================= */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 64px;
+    height: 27px;
+    padding: 0 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.status-active,
+.status-present {
+    background: #e9f7ef;
+    color: var(--success);
+}
+
+.status-inactive,
+.status-absent {
+    background: #fcebea;
+    color: var(--danger);
+}
+
+.status-late {
+    background: #fff5dc;
+    color: var(--warning);
+}
+
+/* =========================================================
+   ATTENDANCE
+========================================================= */
+
+#attendanceManagementTable td {
+    white-space: nowrap;
+}
+
+.attendance-toolbar {
+    margin-bottom: 18px;
+}
+
+.attendance-toolbar input {
+    grid-column: span 1;
+}
+
+/* =========================================================
+   FACULTY
+========================================================= */
+
+.faculty-table {
+    width: 100%;
+    overflow-x: auto;
+}
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+.settings-form {
+    max-width: 650px;
+}
+
+.settings-form label {
+    display: block;
+    margin: 0 0 7px;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.settings-form input {
+    width: 100%;
+    height: 43px;
+    margin-bottom: 17px;
+    padding: 0 12px;
+    border: 1px solid #cfd7e1;
+    border-radius: 9px;
+    background: #fff;
+    color: #344054;
+    font-size: 13px;
+    outline: none;
+}
+
+.settings-form input:focus {
+    border-color: var(--ama-red);
+    box-shadow: 0 0 0 3px rgba(104, 11, 13, 0.08);
+}
+
+.upload-box {
+    min-height: 150px;
+    margin-bottom: 18px;
+    padding: 30px;
+    border: 2px dashed #cfd7e1;
+    border-radius: 12px;
+    background: #fafbfc;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.upload-box:hover {
+    border-color: var(--ama-red);
+    background: #fffafa;
+}
+
+.upload-box p {
+    margin-bottom: 6px;
+    color: #344054;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.upload-box small {
+    color: var(--muted);
+}
+
+.save-btn {
+    min-height: 42px;
+    padding: 0 20px;
+    border: 1px solid var(--ama-red);
+    border-radius: 9px;
+    background: var(--ama-red);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.save-btn:hover {
+    background: var(--ama-red-dark);
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 25px;
+    background: rgba(15, 23, 42, 0.55);
+    overflow-y: auto;
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 620px;
+    max-height: 90vh;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 22px;
+    border-bottom: 1px solid var(--border);
+}
+
+.modal-header h2 {
+    font-size: 19px;
+    color: #172033;
+}
+
+.close-modal {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    color: #667085;
+    font-size: 25px;
+    cursor: pointer;
+}
+
+.close-modal:hover {
+    background: #f2f4f7;
+    color: var(--ama-red);
+}
+
+.modal-body {
+    padding: 22px;
+}
+
+.modal-body label {
+    display: block;
+    margin-bottom: 7px;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.modal-body input,
+.modal-body select {
+    width: 100%;
+    height: 42px;
+    margin-bottom: 15px;
+    padding: 0 11px;
+    border: 1px solid #cfd7e1;
+    border-radius: 8px;
+    background: #fff;
+    color: #344054;
+    font-size: 13px;
+    outline: none;
+}
+
+.modal-body input:focus,
+.modal-body select:focus {
+    border-color: var(--ama-red);
+    box-shadow: 0 0 0 3px rgba(104, 11, 13, 0.08);
+}
+
+.modal-body input[type="file"] {
+    height: auto;
+    padding: 9px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding: 17px 22px;
+    border-top: 1px solid var(--border);
+}
+
+.btn-secondary {
+    min-height: 40px;
+    padding: 0 17px;
+    border: 1px solid #cfd7e1;
+    border-radius: 8px;
+    background: #fff;
+    color: #344054;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.btn-secondary:hover {
+    background: #f5f6f8;
+}
+
+/* =========================================================
+   LOADING / EMPTY / ERROR STATES
+========================================================= */
+
+.loading-state,
+.empty-state,
+.error-state {
+    padding: 45px 20px !important;
+    text-align: center !important;
+    color: var(--muted);
+    font-size: 13px;
+}
+
+.error-state {
+    color: var(--danger);
+}
+
+.loading-spinner {
+    width: 28px;
+    height: 28px;
+    margin: 0 auto 10px;
+    border: 3px solid #e5e7eb;
+    border-top-color: var(--ama-red);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================================================
+   MESSAGE BOX
+========================================================= */
+
+.message-box {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    z-index: 3000;
+    min-width: 280px;
+    max-width: 400px;
+    padding: 14px 17px;
+    border-radius: 10px;
+    background: #172033;
+    color: #fff;
+    font-size: 13px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+}
+
+.message-box.success {
+    background: var(--success);
+}
+
+.message-box.error {
+    background: var(--danger);
+}
+
+.message-box.warning {
+    background: var(--warning);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1200px) {
+    .stats-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .student-toolbar,
+    .attendance-toolbar {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .sidebar {
+        width: 190px;
+    }
+
+    .main {
+        margin-left: 190px;
+        padding: 20px;
+    }
+
+    .topbar {
+        flex-direction: column;
+    }
+
+    .top-right {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        min-height: auto;
+    }
+
+    .sidebar-logo {
+        justify-content: flex-start;
+    }
+
+    .menu-link.logout {
+        margin-top: 10px;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: 15px;
+    }
+
+    .header-title h1 {
+        font-size: 24px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .student-toolbar,
+    .attendance-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .top-right {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .datetime {
+        text-align: left;
+    }
+
+    .modal {
+        padding: 10px;
+    }
+
+    .modal-content {
+        max-height: 95vh;
+    }
+
+    .action-group,
+    .actions {
+        flex-wrap: wrap;
+    }
+}

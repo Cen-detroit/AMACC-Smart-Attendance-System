@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMA Administrator Control Center</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <div class="sidebar-logo">
+        <img src="images/AMA Logo.png" alt="AMA Logo">
+    </div>
+
+    <div class="menu-title">Administrator</div>
+
+    <a class="menu-link active" onclick="showSection('dashboard', this)">
+        <span class="tag">DSH</span>
+        <span class="label">Dashboard</span>
+    </a>
+
+    <a class="menu-link" onclick="showSection('students', this)">
+        <span class="tag">STD</span>
+        <span class="label">Students</span>
+    </a>
+
+    <a class="menu-link" onclick="showSection('faculty', this)">
+        <span class="tag">FAC</span>
+        <span class="label">Faculty</span>
+    </a>
+
+    <a class="menu-link" onclick="showSection('attendance', this)">
+        <span class="tag">ATT</span>
+        <span class="label">Attendance</span>
+    </a>
+
+    <a class="menu-link" onclick="showSection('reports', this)">
+        <span class="tag">RPT</span>
+        <span class="label">Reports</span>
+    </a>
+
+    <a class="menu-link" onclick="showSection('settings', this)">
+        <span class="tag">SET</span>
+        <span class="label">Settings</span>
+    </a>
+
+    <a class="menu-link logout" onclick="logout()">
+        <span class="tag">OUT</span>
+        <span class="label">Logout</span>
+    </a>
+
+</div>
+
+<div class="main">
+
+    <!-- DASHBOARD -->
+    <div id="overviewSection">
+
+        <div class="topbar">
+
+            <div class="header-title">
+
+                <div class="eyebrow">
+                    <span class="dot"></span>
+                    ADMINISTRATOR
+                </div>
+
+                <h1>Administrator Control Center</h1>
+
+                <p>Smart Attendance Campus Management System</p>
+
+            </div>
+
+            <div class="top-right">
+
+                <div class="datetime">
+                    <div id="currentDay"></div>
+                    <div id="currentDate"></div>
+                    <div id="currentTime"></div>
+                </div>
+
+                <div class="profile">
+
+                    <img id="adminPreview"
+                         src="https://placehold.co/80x80"
+                         alt="Administrator">
+
+                    <div>
+                        <strong id="adminNamePreview">Administrator</strong>
+                        <small id="adminEmailPreview">admin@email.com</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="stats-grid">
+
+            <div class="stat-card red">
+                <h3>Total Students</h3>
+                <p id="totalStudents">0</p>
+            </div>
+
+            <div class="stat-card dark">
+                <h3>Total Faculty</h3>
+                <p id="totalFaculty">0</p>
+            </div>
+
+            <div class="stat-card blue">
+                <h3>College Students</h3>
+                <p id="totalCollegeStudents">0</p>
+            </div>
+
+            <div class="stat-card dark">
+                <h3>SHS Students</h3>
+                <p id="totalSHSStudents">0</p>
+            </div>
+
+            <div class="stat-card red">
+                <h3>Attendance Today</h3>
+                <p id="todayAttendance">0</p>
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>
+                <span class="tag">NEW</span>
+                Recently Added Students
+            </h2>
+
+            <div id="recentStudents">
+
+                <div class="class-item">
+
+                    <div>
+                        <strong>No students yet</strong>
+                        <br>
+                        <small>Recently registered students will appear here.</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h2>
+                <span class="tag">LIVE</span>
+                Recent Attendance Activity
+            </h2>
+
+            <div id="recentAttendance">
+                <div class="activity-empty">
+                    Waiting for students to scan...
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- STUDENTS -->
+    <div id="studentsSection" style="display:none;">
+
+        <div class="card">
+
+            <h2>
+                <span class="tag">STD</span>
+                Student Management
+            </h2>
+
+            <p class="section-description">
+                Students registered through the attendance registration system automatically appear here.
+            </p>
+
+            <div class="student-toolbar">
+
+                <select id="studentDepartmentFilter">
+                    <option value="">All Departments</option>
+                    <option value="College">College</option>
+                    <option value="SHS">SHS</option>
+                </select>
+
+                <select id="studentCourseFilter">
+                    <option value="">All Courses</option>
+                </select>
+
+                <select id="studentMajorFilter">
+                    <option value="">All Majors / Strands</option>
+                </select>
+
+                <select id="studentYearFilter">
+                    <option value="">All Year Levels</option>
+                    <option value="1st Year">1st Year</option>
+                    <option value="2nd Year">2nd Year</option>
+                    <option value="3rd Year">3rd Year</option>
+                    <option value="4th Year">4th Year</option>
+                    <option value="Grade 11">Grade 11</option>
+                    <option value="Grade 12">Grade 12</option>
+                </select>
+
+                <select id="studentStatusFilter">
+                    <option value="">All Status</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Photo</th>
+                            <th>Student Number</th>
+                            <th>Full Name</th>
+                            <th>Department</th>
+                            <th>Course</th>
+                            <th>Major / Strand</th>
+                            <th>Year Level</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="studentsTable">
+
+                        <tr>
+                            <td colspan="9" style="text-align:center;">
+                                Loading students...
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- FACULTY -->
+    <div id="facultySection" style="display:none;">
+
+        <div class="card">
+
+            <h2>
+                <span class="tag">FAC</span>
+                Faculty Management
+            </h2>
+
+            <p class="section-description">
+                Faculty accounts created through the Faculty Dashboard automatically appear in this section.
+            </p>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+                        <th>Employee Number</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Account Created</th>
+                        <th>Account Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody id="facultyTable">
+
+                    <tr>
+                        <td colspan="6" style="text-align:center;">
+                            Loading faculty accounts...
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+
+    <!-- ATTENDANCE -->
+    <div id="attendanceSection" style="display:none;">
+
+        <div class="card">
+
+            <h2>
+                <span class="tag">ATT</span>
+                Live Attendance Center
+            </h2>
+
+            <div class="attendance-toolbar">
+
+                <input
+                    type="text"
+                    id="searchStudent"
+                    placeholder="Search student...">
+
+                <select id="filterDepartment">
+                    <option value="">All Departments</option>
+                </select>
+
+                <select id="filterCourse">
+                    <option value="">All Courses</option>
+                </select>
+
+                <select id="filterMajor">
+                    <option value="">All Majors / Strands</option>
+                </select>
+
+                <select id="filterYear">
+                    <option value="">All Year Levels</option>
+                </select>
+
+                <select id="filterStatus">
+                    <option value="">All Status</option>
+                    <option value="Present">Present</option>
+                    <option value="Late">Late</option>
+                    <option value="Absent">Absent</option>
+                </select>
+
+            </div>
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>Student</th>
+                            <th>Student No.</th>
+                            <th>Department</th>
+                            <th>Course</th>
+                            <th>Major / Strand</th>
+                            <th>Year Level</th>
+                            <th>Time In</th>
+                            <th>Time Out</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="attendanceManagementTable">
+
+                        <tr>
+                            <td colspan="9" style="text-align:center;">
+                                Loading attendance...
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- REPORTS -->
+    <div id="reportsSection" style="display:none;">
+
+        <div class="card">
+
+            <h2>
+                <span class="tag">RPT</span>
+                Reports
+            </h2>
+
+            <p>
+                Attendance reports will be displayed here.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- SETTINGS -->
+    <div id="settingsSection" style="display:none;">
+
+        <div class="card">
+
+            <h2>
+                <span class="tag">SET</span>
+                Administrator Profile Settings
+            </h2>
+
+            <div class="settings-form">
+
+                <label>Full Name</label>
+
+                <input
+                    type="text"
+                    id="adminName">
+
+                <label>Email Address</label>
+
+                <input
+                    type="email"
+                    id="adminEmail"
+                    disabled>
+
+                <label>Change Password</label>
+
+                <input
+                    type="password"
+                    id="adminPassword"
+                    placeholder="Enter new password">
+
+                <label>Upload Profile Picture</label>
+
+                <div
+                    class="upload-box"
+                    id="uploadBox">
+
+                    <input
+                        type="file"
+                        id="adminImage"
+                        accept="image/*"
+                        hidden>
+
+                    <p>Drag &amp; Drop Image Here</p>
+
+                    <small>or click to upload</small>
+
+                </div>
+
+                <button
+                    class="save-btn"
+                    onclick="saveProfile()">
+
+                    Save Profile
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- STUDENT MODAL -->
+    <div
+        id="studentModal"
+        class="modal"
+        style="display:none;">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h2 id="studentModalTitle">
+                    Edit Student
+                </h2>
+
+                <span
+                    class="close-modal"
+                    onclick="closeStudentModal()">
+
+                    &times;
+
+                </span>
+
+            </div>
+
+            <div class="modal-body">
+
+                <input
+                    type="hidden"
+                    id="studentId">
+
+                <label>Student Number</label>
+
+                <input
+                    type="text"
+                    id="studentNumber"
+                    placeholder="Student number">
+
+                <label>Full Name</label>
+
+                <input
+                    type="text"
+                    id="studentName"
+                    placeholder="Full name">
+
+                <label>Department</label>
+
+                <select id="studentDepartment">
+                    <option value="">Select Department</option>
+                </select>
+
+                <label>Course</label>
+
+                <select id="studentCourse">
+                    <option value="">Select Course</option>
+                </select>
+
+                <label>Major / Strand</label>
+
+                <select id="studentMajor">
+                    <option value="">Select Major / Strand</option>
+                </select>
+
+                <label>Year Level</label>
+
+                <select id="studentYear">
+                    <option value="">Select Year Level</option>
+                </select>
+
+                <label>Adviser Name</label>
+
+                <input
+                    type="text"
+                    id="advisorName"
+                    placeholder="Adviser name">
+
+                <label>Adviser Phone Number</label>
+
+                <input
+                    type="text"
+                    id="advisorPhone"
+                    placeholder="Adviser phone number">
+
+                <label>Guardian Name</label>
+
+                <input
+                    type="text"
+                    id="guardianName"
+                    placeholder="Guardian name">
+
+                <label>Guardian Phone Number</label>
+
+                <input
+                    type="text"
+                    id="guardianPhone"
+                    placeholder="Guardian phone number">
+
+                <label>Relationship</label>
+
+                <input
+                    type="text"
+                    id="guardianRelationship"
+                    placeholder="Parent / Guardian / etc.">
+
+                <label>Status</label>
+
+                <select id="studentStatus">
+
+                    <option value="Active">
+                        Active
+                    </option>
+
+                    <option value="Inactive">
+                        Inactive
+                    </option>
+
+                </select>
+
+                <label>Student Photo</label>
+
+                <input
+                    type="file"
+                    id="studentPhoto"
+                    accept="image/*">
+
+            </div>
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn-secondary"
+                    onclick="closeStudentModal()">
+
+                    Cancel
+
+                </button>
+
+                <button
+                    class="btn-primary"
+                    onclick="saveStudent()">
+
+                    Save &amp; Exit
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- SUPABASE LIBRARY -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- SUPABASE CONFIGURATION -->
+<script src="js/supabase.js"></script>
+
+<!-- ADMIN JAVASCRIPT -->
+<script src="js/admin.js"></script>
+
+</body>
+</html>

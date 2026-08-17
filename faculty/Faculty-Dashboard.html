@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>AMA Faculty Attendance Dashboard</title>
+
+
+    <!-- GOOGLE FONTS -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+
+    <!-- FACULTY DASHBOARD CSS -->
+
+    <link
+        rel="stylesheet"
+        href="Faculty-Dashboard.css">
+
+</head>
+
+<body>
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+<div class="sidebar">
+
+    <div>
+
+        <!-- LOGO -->
+
+        <div class="logo">
+
+        <img
+            src="AMA Logo.png"
+            alt="AMA Computer College Logo"
+            class="ama-logo">
+
+        <p>
+            Attendance Monitoring System
+        </p>
+
+    </div>
+
+
+        <!-- MENU -->
+
+        <div class="menu">
+
+            <div class="menu-title">
+                Faculty Portal
+            </div>
+
+
+            <!-- DASHBOARD -->
+
+            <a
+                class="active menu-link"
+                onclick="showSection('dashboard', this)">
+
+                <span class="tag">
+                    DSH
+                </span>
+
+                <span class="label">
+                    Dashboard
+                </span>
+
+            </a>
+
+
+            <!-- LIVE ATTENDANCE -->
+
+            <a
+                class="menu-link"
+                onclick="showSection('attendance', this)">
+
+                <span class="tag">
+                    ATT
+                </span>
+
+                <span class="label">
+                    Live Attendance
+                </span>
+
+            </a>
+
+
+            <!-- ATTENDANCE HISTORY -->
+
+            <a
+                class="menu-link"
+                onclick="showSection('history', this)">
+
+                <span class="tag">
+                    HIS
+                </span>
+
+                <span class="label">
+                    Attendance History
+                </span>
+
+            </a>
+
+
+            <!-- REPORTS -->
+
+            <a
+                class="menu-link"
+                onclick="showSection('reports', this)">
+
+                <span class="tag">
+                    RPT
+                </span>
+
+                <span class="label">
+                    Reports
+                </span>
+
+            </a>
+
+
+            <!-- SETTINGS -->
+
+            <a
+                class="menu-link"
+                onclick="showSection('settings', this)">
+
+                <span class="tag">
+                    SET
+                </span>
+
+                <span class="label">
+                    Profile Settings
+                </span>
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- LOGOUT -->
+
+    <div
+        class="logout"
+        onclick="logout()">
+
+        Log out
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+
+<div class="main">
+
+<!-- =========================================================
+     DASHBOARD SECTION
+========================================================= -->
+
+<div id="overviewSection">
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+        <div class="header-title">
+
+            <div class="eyebrow">
+
+                <span class="dot"></span>
+
+                SYSTEM ONLINE
+
+            </div>
+
+
+            <h1>
+                Faculty Dashboard
+            </h1>
+
+
+            <p>
+                Attendance Monitoring System
+            </p>
+
+        </div>
+
+
+        <!-- TOP RIGHT -->
+
+        <div class="top-right">
+
+
+            <!-- DATE AND TIME -->
+
+            <div class="datetime">
+
+                <div id="currentDay">
+                    Loading...
+                </div>
+
+                <div id="currentDate">
+                    Loading...
+                </div>
+
+                <div id="currentTime">
+                    --:--:--
+                </div>
+
+            </div>
+
+
+            <!-- FACULTY PROFILE -->
+
+            <div class="profile">
+
+                <img
+                    id="facultyPreview"
+                    src="https://i.imgur.com/2DhmtJ4.png"
+                    alt="Faculty Profile">
+
+
+                <div>
+
+                    <strong id="facultyNamePreview">
+                        Faculty
+                    </strong>
+
+                    <br>
+
+                    <small id="facultyEmailPreview">
+                        faculty@email.com
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         STATISTICS
+    ====================================================== -->
+
+    <div class="stats-grid">
+
+
+        <!-- TOTAL STUDENTS -->
+
+        <div class="stat-card red">
+
+            <h3>
+                Total Students
+            </h3>
+
+            <p id="totalStudents">
+                0
+            </p>
+
+        </div>
+
+
+        <!-- PRESENT -->
+
+        <div class="stat-card dark">
+
+            <h3>
+                Present Today
+            </h3>
+
+            <p id="presentStudents">
+                0
+            </p>
+
+        </div>
+
+
+        <!-- ABSENT -->
+
+        <div class="stat-card blue">
+
+            <h3>
+                Absent Today
+            </h3>
+
+            <p id="absentStudents">
+                0
+            </p>
+
+        </div>
+
+
+        <!-- LATE -->
+
+        <div class="stat-card dark">
+
+            <h3>
+                Late Today
+            </h3>
+
+            <p id="lateStudents">
+                0
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         RECENT ATTENDANCE
+    ====================================================== -->
+
+    <div class="card">
+
+        <h2>
+
+            <span class="tag">
+                LIVE
+            </span>
+
+            Recent Attendance Activity
+
+        </h2>
+
+
+        <div id="recentAttendance">
+
+            <div class="activity-empty">
+
+                Waiting for students to scan...
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     LIVE ATTENDANCE SECTION
+========================================================= -->
+
+<div
+    id="attendanceSection"
+    style="display:none;">
+
+    <div class="card">
+
+
+        <h2>
+
+            <span class="tag">
+                ATT
+            </span>
+
+            Live Attendance Center
+
+        </h2>
+
+
+        <!-- FILTER TOOLBAR -->
+
+        <div class="attendance-toolbar">
+
+
+            <!-- SEARCH -->
+
+            <input
+                type="text"
+                id="searchStudent"
+                placeholder="Search student...">
+
+
+            <!-- COURSE -->
+
+            <select id="filterCourse">
+
+                <option value="">
+                    All Courses
+                </option>
+
+            </select>
+
+
+            <!-- YEAR -->
+
+            <select id="filterYear">
+
+                <option value="">
+                    All Years
+                </option>
+
+            </select>
+
+
+            <!-- STATUS -->
+
+            <select id="filterStatus">
+
+                <option value="">
+                    All Status
+                </option>
+
+                <option value="Present">
+                    Present
+                </option>
+
+                <option value="Late">
+                    Late
+                </option>
+
+                <option value="Absent">
+                    Absent
+                </option>
+
+            </select>
+
+
+        </div>
+
+
+
+        <!-- ATTENDANCE TABLE -->
+
+        <div
+            style="
+                width:100%;
+                overflow-x:auto;
+            ">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Student
+                        </th>
+
+                        <th>
+                            Student No.
+                        </th>
+
+                        <th>
+                            Course
+                        </th>
+
+                        <th>
+                            Year
+                        </th>
+
+                        <th>
+                            Time In
+                        </th>
+
+                        <th>
+                            Time Out
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="attendanceManagementTable">
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            style="text-align:center;">
+
+                            Loading attendance...
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     ATTENDANCE HISTORY
+========================================================= -->
+
+<div id="historySection" style="display:none;">
+
+    <div class="card">
+
+        <h2>
+            <span class="tag">HIS</span>
+            Attendance History
+        </h2>
+
+        <p style="
+            margin-bottom:20px;
+            color:#666;
+            font-size:14px;
+        ">
+            View and filter the complete attendance records of students,
+            including Date, Time In, Time Out, Course, Year Level,
+            and Attendance Status.
+        </p>
+
+        <!-- =====================================================
+             HISTORY FILTER TOOLBAR
+        ====================================================== -->
+
+        <div class="attendance-toolbar">
+
+            <!-- STUDENT SEARCH -->
+
+            <input
+                type="text"
+                id="historySearchStudent"
+                placeholder="Search student or student number..."
+            >
+
+
+            <!-- DATE FILTER -->
+
+            <input
+                type="date"
+                id="historyFilterDate"
+            >
+
+
+            <!-- COURSE FILTER -->
+
+            <select id="historyFilterCourse">
+
+                <option value="">
+                    All Courses
+                </option>
+
+            </select>
+
+
+            <!-- YEAR FILTER -->
+
+            <select id="historyFilterYear">
+
+                <option value="">
+                    All Years
+                </option>
+
+            </select>
+
+
+            <!-- STATUS FILTER -->
+
+            <select id="historyFilterStatus">
+
+                <option value="">
+                    All Status
+                </option>
+
+                <option value="Present">
+                    Present
+                </option>
+
+                <option value="Late">
+                    Late
+                </option>
+
+                <option value="Absent">
+                    Absent
+                </option>
+
+            </select>
+
+
+            <!-- CLEAR FILTERS -->
+
+            <button
+                type="button"
+                id="clearHistoryFilters"
+                class="save-btn"
+            >
+                Clear Filters
+            </button>
+
+        </div>
+
+
+        <!-- =====================================================
+             HISTORY RESULT INFORMATION
+        ====================================================== -->
+
+        <div
+            id="historyResultInfo"
+            style="
+                margin:15px 0;
+                font-size:14px;
+                color:#666;
+            "
+        >
+            Loading attendance history...
+        </div>
+
+
+        <!-- =====================================================
+             HISTORY TABLE
+        ====================================================== -->
+
+        <div
+            style="
+                width:100%;
+                overflow-x:auto;
+            "
+        >
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Student
+                        </th>
+
+                        <th>
+                            Student No.
+                        </th>
+
+                        <th>
+                            Course
+                        </th>
+
+                        <th>
+                            Year
+                        </th>
+
+                        <th>
+                            Time In
+                        </th>
+
+                        <th>
+                            Time Out
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="historyTable">
+
+                    <tr>
+
+                        <td
+                            colspan="8"
+                            style="text-align:center;"
+                        >
+
+                            Loading attendance history...
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     REPORT SECTION
+========================================================= -->
+
+<div
+    id="reportsSection"
+    style="display:none;">
+
+    <div class="card">
+
+
+        <h2>
+
+            <span class="tag">
+                RPT
+            </span>
+
+            Send Report to Admin
+
+        </h2>
+
+
+        <!-- REPORT SENDER -->
+
+        <input
+            type="text"
+            id="reportSender"
+            readonly
+            placeholder="Faculty Name">
+
+
+        <!-- REPORT SUBJECT -->
+
+        <input
+            type="text"
+            id="reportSubject"
+            placeholder="Report Subject">
+
+
+        <!-- REPORT MESSAGE -->
+
+        <textarea
+            id="reportMessage"
+            placeholder="Enter your report message here..."></textarea>
+
+
+        <!-- SEND BUTTON -->
+
+        <button
+            onclick="sendReport()">
+
+            Send Report
+
+        </button>
+
+
+        <br>
+        <br>
+
+
+        <!-- REPORT STATUS -->
+
+        <div id="reportStatus"></div>
+
+
+        <hr
+            style="
+                margin:30px 0;
+                border:0;
+                border-top:1px solid #ddd;
+            ">
+
+
+        <h3>
+            My Submitted Reports
+        </h3>
+
+
+        <div id="facultyReportHistory">
+
+            <div class="activity-empty">
+                No reports submitted yet.
+            </div>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     PROFILE SETTINGS
+========================================================= -->
+
+<div
+    id="settingsSection"
+    style="display:none;">
+
+    <div class="card">
+
+
+        <h2>
+
+            <span class="tag">
+                SET
+            </span>
+
+            Faculty Profile Settings
+
+        </h2>
+
+
+        <div class="settings-form">
+
+
+            <!-- NAME -->
+
+            <label>
+                Faculty Name
+            </label>
+
+            <input
+                type="text"
+                id="facultyName"
+                placeholder="Enter Faculty Name">
+
+
+            <!-- EMAIL -->
+
+            <label>
+                Email Address
+            </label>
+
+            <input
+                type="email"
+                id="facultyEmail"
+                placeholder="Enter Email Address">
+
+
+            <!-- PASSWORD -->
+
+            <label>
+                Change Password
+            </label>
+
+            <input
+                type="password"
+                id="facultyPassword"
+                placeholder="Enter New Password">
+
+
+            <!-- PROFILE PICTURE -->
+
+            <label>
+                Upload Profile Picture
+            </label>
+
+
+            <div
+                class="upload-box"
+                id="uploadBox">
+
+
+                <input
+                    type="file"
+                    id="facultyImage"
+                    accept="image/*"
+                    hidden>
+
+
+                <p>
+                    Drag & Drop Image Here
+                </p>
+
+
+                <small>
+                    or click to upload
+                </small>
+
+
+            </div>
+
+
+            <!-- SAVE -->
+
+            <button
+                class="save-btn"
+                onclick="saveProfile()">
+
+                Save Profile
+
+            </button>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- SUPABASE LIBRARY -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- SHARED PROJECT CONFIGURATION -->
+<script src="js/config.js"></script>
+
+<!-- SHARED SUPABASE FUNCTIONS -->
+<script src="js/supabase.js"></script>
+
+<!-- SHARED HELPER FUNCTIONS -->
+<script src="js/helpers.js"></script>
+
+<!-- FACULTY DASHBOARD -->
+<script src="Faculty-Dashboard.js"></script>
+
+</body>
+
+</html>

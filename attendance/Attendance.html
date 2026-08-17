@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>AMACC Barcode Attendance System</title>
+
+
+    <!-- GOOGLE FONTS -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+
+    <!-- ATTENDANCE CSS -->
+
+    <link
+        rel="stylesheet"
+        href="attendance.css">
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<div class="header">
+
+    <div class="header-left">
+
+        <img
+            src="AMA logo.png"
+            alt="AMA Logo">
+
+        <div class="header-titles">
+
+            <h1>
+                AMACC Barcode Attendance System
+            </h1>
+
+            <div class="header-eyebrow">
+
+                <span class="dot"></span>
+
+                Scanner Active
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <button
+        type="button"
+        onclick="logout()"
+        class="logout-btn">
+
+        Logout
+
+    </button>
+
+</div>
+
+
+
+<!-- =========================================================
+     MAIN CONTAINER
+========================================================= -->
+
+<div class="container">
+
+
+    <!-- =====================================================
+         SCANNER VIEW
+    ====================================================== -->
+
+    <div id="scannerView">
+
+
+        <div class="card">
+
+
+            <!-- CARD HEADER -->
+
+            <div class="card-header">
+
+                <span>
+                    Student Information
+                </span>
+
+                <span>
+                    BARCODE ACTIVE
+                </span>
+
+            </div>
+
+
+
+            <!-- STUDENT PROFILE -->
+
+            <div class="profile">
+
+                <img
+                    id="studentImage"
+                    src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                    alt="Student Photo">
+
+
+                <div
+                    class="name"
+                    id="studentName">
+
+                    Waiting for Barcode Scan...
+
+                </div>
+
+
+                <div class="info-row">
+
+
+                    <!-- STUDENT ID -->
+
+                    <div>
+
+                        <div class="info-title">
+                            Student ID
+                        </div>
+
+                        <div
+                            class="info-value"
+                            id="studentId">
+
+                            ------
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- COURSE -->
+
+                    <div>
+
+                        <div class="info-title">
+                            Course &amp; Year
+                        </div>
+
+                        <div
+                            class="info-value"
+                            id="studentCourse">
+
+                            ------
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+
+            <!-- TIME -->
+
+            <div class="time-container">
+
+
+                <div class="time-box">
+
+                    <h3>
+                        Current Time
+                    </h3>
+
+
+                    <div
+                        class="time"
+                        id="timeNow">
+
+                        --:--:--
+
+                    </div>
+
+
+                    <div
+                        class="date"
+                        id="dateToday">
+
+                        Loading Date...
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- BARCODE -->
+
+                <div class="barcode-box">
+
+                    <h3>
+                        Scan Barcode
+                    </h3>
+
+
+                    <div class="scan-arrow">
+                        ↓
+                    </div>
+
+
+                    <input
+                        type="text"
+                        id="barcodeInput"
+                        class="barcode-input"
+                        autocomplete="off"
+                        autofocus>
+
+                </div>
+
+
+
+                <!-- STATUS -->
+
+                <div
+                    class="status-box"
+                    id="statusBox">
+
+                    Waiting for barcode scan...
+
+                </div>
+
+
+
+                <!-- REGISTER LINK -->
+
+                <div class="new-student-link">
+
+                    New student?
+
+                    <span onclick="showRegister()">
+                        Register here
+                    </span>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             TODAY'S COUNT
+        ================================================== -->
+
+        <div class="stats">
+
+            <h4>
+                Students Entered Today
+            </h4>
+
+
+            <div
+                class="number"
+                id="studentCount">
+
+                0
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =====================================================
+         NEW STUDENT REGISTRATION
+    ====================================================== -->
+
+    <div
+        id="registerView"
+        class="hidden">
+
+
+        <div class="card">
+
+
+            <!-- REGISTRATION HEADER -->
+
+            <div class="reg-card-header">
+
+                <span>
+                    New Student Registration
+                </span>
+
+                <span>
+                    NOT IN DATABASE
+                </span>
+
+            </div>
+
+
+
+            <!-- REGISTRATION FORM -->
+
+            <div class="reg-form">
+
+
+                <div class="reg-note">
+
+                    // add a student not yet found in the system
+
+                </div>
+
+
+
+                <!-- FULL NAME -->
+
+                <div class="reg-group">
+
+                    <label for="regFullName">
+                        Full Name
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="regFullName"
+                        placeholder="Enter Full Name"
+                        autocomplete="off">
+
+                </div>
+
+
+
+                <!-- STUDENT NUMBER -->
+
+                <div class="reg-group">
+
+                    <label for="regStudentNumber">
+                        Student Number
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="regStudentNumber"
+                        placeholder="Enter Student Number / Barcode"
+                        autocomplete="off">
+
+                </div>
+
+
+
+                <!-- COURSE -->
+
+                <div class="reg-group">
+
+                    <label for="regCourse">
+                        Course / Strand
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="regCourse"
+                        placeholder="e.g. BSIT, BSCS, STEM, HUMSS"
+                        autocomplete="off">
+
+                </div>
+
+
+
+                <!-- YEAR LEVEL -->
+
+                <div class="reg-group">
+
+                    <label for="regYearLevel">
+                        Year Level
+                    </label>
+
+
+                    <select id="regYearLevel">
+
+                        <option value="">
+                            Select Year Level
+                        </option>
+
+                        <option value="1st Year">
+                            1st Year
+                        </option>
+
+                        <option value="2nd Year">
+                            2nd Year
+                        </option>
+
+                        <option value="3rd Year">
+                            3rd Year
+                        </option>
+
+                        <option value="4th Year">
+                            4th Year
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+
+                <!-- PHOTO -->
+
+                <div class="reg-group">
+
+                    <label for="regPhotoFile">
+                        Photo (optional)
+                    </label>
+
+
+                    <div
+                        class="reg-upload-box"
+                        id="regUploadBox">
+
+
+                        <input
+                            type="file"
+                            id="regPhotoFile"
+                            accept="image/*"
+                            hidden>
+
+
+                        <img
+                            id="regPhotoPreview"
+                            class="reg-photo-preview hidden"
+                            alt="Preview">
+
+
+                        <p id="regUploadText">
+                            Click to attach a photo
+                        </p>
+
+
+                        <small>
+                            JPG or PNG, optional
+                        </small>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- ACTION BUTTONS -->
+
+                <div class="reg-actions">
+
+
+                    <button
+                        type="button"
+                        class="reg-btn"
+                        id="regSubmitBtn"
+                        onclick="registerStudent()">
+
+                        Save Student
+
+                    </button>
+
+
+
+                    <button
+                        type="button"
+                        class="back-btn"
+                        onclick="showScanner()">
+
+                        Back
+
+                    </button>
+
+
+                </div>
+
+
+
+                <!-- REGISTRATION STATUS -->
+
+                <div
+                    class="reg-status"
+                    id="regStatus">
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+<!-- =========================================================
+     SUPABASE
+========================================================= -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
+
+
+<!-- =========================================================
+     PROJECT JAVASCRIPT
+========================================================= -->
+
+<script src="js/config.js"></script>
+
+<script src="js/supabase.js"></script>
+
+<script src="js/helpers.js"></script>
+
+<script src="attendance.js"></script>
+
+
+</body>
+
+</html>

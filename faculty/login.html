@@ -1,0 +1,2062 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>AMACC Faculty Login</title>
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+
+<style>
+
+/* ==========================================================
+   ROOT VARIABLES
+========================================================== */
+
+:root{
+
+    --maroon:#8b000f;
+
+    --maroon-deep:#6d000c;
+
+    --maroon-bright:#c1121f;
+
+    --gold:#ffd54f;
+
+    --gold-deep:#e8b923;
+
+    --ink:#1e293b;
+
+    --muted:#64748b;
+
+    --line:#e2e8f0;
+
+    --ok:#16a34a;
+
+    --bad:#b91c1c;
+
+    --radius-sm:4px;
+
+    --radius-md:6px;
+
+}
+
+
+/* ==========================================================
+   GENERAL
+========================================================== */
+
+*{
+
+    margin:0;
+
+    padding:0;
+
+    box-sizing:border-box;
+
+    font-family:
+        'IBM Plex Sans',
+        Arial,
+        Helvetica,
+        sans-serif;
+
+}
+
+
+label,
+.subtitle,
+.eyebrow,
+.toggle-password,
+.message,
+.switch-text{
+
+    font-family:
+        'IBM Plex Mono',
+        'Courier New',
+        monospace;
+
+}
+
+
+/* ==========================================================
+   BODY
+========================================================== */
+
+body{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:
+
+        linear-gradient(
+            160deg,
+            rgba(109,0,12,0.96),
+            rgba(139,0,15,0.94) 55%,
+            rgba(90,0,10,0.97)
+        ),
+
+        url("ama-bg.jpg");
+
+    background-size:cover;
+
+    background-position:center;
+
+    overflow:auto;
+
+    padding:20px;
+
+    position:relative;
+
+}
+
+
+/* ==========================================================
+   TECHNICAL GRID
+========================================================== */
+
+body::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+        linear-gradient(
+            rgba(255,255,255,0.035)
+            1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0.035)
+            1px,
+            transparent 1px
+        );
+
+    background-size:36px 36px;
+
+    pointer-events:none;
+
+}
+
+
+body::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:480px;
+
+    height:480px;
+
+    background:
+        rgba(255,213,79,0.05);
+
+    border-radius:50%;
+
+    top:-180px;
+
+    right:-160px;
+
+    filter:blur(30px);
+
+    pointer-events:none;
+
+}
+
+
+/* ==========================================================
+   CONTAINER
+========================================================== */
+
+.container{
+
+    width:100%;
+
+    max-width:440px;
+
+    position:relative;
+
+    z-index:2;
+
+}
+
+
+/* ==========================================================
+   CARD
+========================================================== */
+
+.card{
+
+    background:
+        rgba(255,255,255,0.07);
+
+    backdrop-filter:
+        blur(20px);
+
+    border:
+        1px solid
+        rgba(255,255,255,0.16);
+
+    border-top:
+        2px solid
+        var(--gold);
+
+    border-radius:
+        var(--radius-md);
+
+    overflow:hidden;
+
+    box-shadow:
+        0 20px 50px
+        rgba(0,0,0,0.35);
+
+    animation:
+        fadeIn 0.5s ease;
+
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.card-header{
+
+    padding:
+        34px
+        28px
+        22px;
+
+    text-align:center;
+
+    position:relative;
+
+}
+
+
+.eyebrow{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    font-size:10.5px;
+
+    letter-spacing:2px;
+
+    text-transform:uppercase;
+
+    color:var(--gold);
+
+    font-weight:600;
+
+    margin-bottom:18px;
+
+}
+
+
+.eyebrow .dot{
+
+    width:6px;
+
+    height:6px;
+
+    border-radius:50%;
+
+    background:var(--ok);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(22,163,74,0.2);
+
+    animation:
+        pulse 2s infinite;
+
+}
+
+
+@keyframes pulse{
+
+    0%,
+    100%{
+        opacity:1;
+    }
+
+    50%{
+        opacity:0.4;
+    }
+
+}
+
+
+/* ==========================================================
+   LOGO
+========================================================== */
+
+.logo-wrapper{
+
+    width:112px;
+
+    height:112px;
+
+    margin:auto;
+
+    background:white;
+
+    border-radius:
+        var(--radius-md);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    box-shadow:
+        0 8px 24px
+        rgba(0,0,0,0.3);
+
+    margin-bottom:18px;
+
+    border:
+        1px solid
+        rgba(0,0,0,0.08);
+
+}
+
+
+.logo{
+
+    width:78px;
+
+    object-fit:contain;
+
+}
+
+
+/* ==========================================================
+   HEADER TEXT
+========================================================== */
+
+.title{
+
+    color:white;
+
+    font-size:24px;
+
+    font-weight:700;
+
+    letter-spacing:-0.3px;
+
+    margin-bottom:8px;
+
+}
+
+
+.subtitle{
+
+    color:
+        rgba(255,255,255,0.65);
+
+    font-size:11px;
+
+    letter-spacing:2px;
+
+}
+
+
+/* ==========================================================
+   BODY
+========================================================== */
+
+.card-body{
+
+    background:#ffffff;
+
+    padding:
+        32px
+        30px
+        30px;
+
+    border-top:
+        1px solid
+        var(--line);
+
+}
+
+
+.card-body h2{
+
+    text-align:center;
+
+    margin-bottom:6px;
+
+    color:var(--ink);
+
+    font-size:20px;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+
+}
+
+
+.form-eyebrow{
+
+    text-align:center;
+
+    color:var(--muted);
+
+    font-size:11px;
+
+    font-family:
+        'IBM Plex Mono',
+        monospace;
+
+    letter-spacing:1px;
+
+    margin-bottom:22px;
+
+    padding-bottom:18px;
+
+    border-bottom:
+        1px solid
+        var(--line);
+
+}
+
+
+/* ==========================================================
+   INPUT GROUP
+========================================================== */
+
+.input-group{
+
+    margin-bottom:16px;
+
+}
+
+
+.input-group label{
+
+    display:block;
+
+    margin-bottom:7px;
+
+    color:var(--maroon);
+
+    font-size:10.5px;
+
+    font-weight:600;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+}
+
+
+.input-group input{
+
+    width:100%;
+
+    padding:
+        13px
+        14px;
+
+    border-radius:
+        var(--radius-sm);
+
+    border:
+        1px solid
+        var(--line);
+
+    outline:none;
+
+    transition:
+        0.15s ease;
+
+    background:#f8fafc;
+
+    color:var(--ink);
+
+    font-size:14px;
+
+}
+
+
+.input-group input::placeholder{
+
+    color:#a3adba;
+
+}
+
+
+.input-group input:focus{
+
+    border-color:
+        var(--maroon);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(139,0,15,0.1);
+
+    background:white;
+
+}
+
+
+/* ==========================================================
+   PASSWORD
+========================================================== */
+
+.password-field{
+
+    position:relative;
+
+}
+
+
+.password-field input{
+
+    padding-right:52px;
+
+}
+
+
+.toggle-password{
+
+    position:absolute;
+
+    right:14px;
+
+    top:50%;
+
+    transform:
+        translateY(-50%);
+
+    cursor:pointer;
+
+    font-size:10.5px;
+
+    font-weight:700;
+
+    letter-spacing:0.5px;
+
+    text-transform:uppercase;
+
+    color:var(--maroon);
+
+    user-select:none;
+
+    background:#fdf0f1;
+
+    border:
+        1px solid
+        rgba(139,0,15,0.2);
+
+    padding:
+        4px 8px;
+
+    border-radius:3px;
+
+}
+
+
+/* ==========================================================
+   BUTTON
+========================================================== */
+
+.btn{
+
+    width:100%;
+
+    padding:14px;
+
+    border:
+        1px solid
+        var(--maroon-deep);
+
+    border-radius:
+        var(--radius-sm);
+
+    background:var(--maroon);
+
+    color:white;
+
+    font-family:
+        'IBM Plex Mono',
+        monospace;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+    cursor:pointer;
+
+    transition:
+        0.15s ease;
+
+    margin-top:8px;
+
+}
+
+
+.btn:hover{
+
+    background:
+        var(--maroon-bright);
+
+}
+
+
+.btn:active{
+
+    transform:
+        translateY(1px);
+
+}
+
+
+.btn:disabled{
+
+    opacity:0.55;
+
+    cursor:not-allowed;
+
+}
+
+
+/* ==========================================================
+   SWITCH
+========================================================== */
+
+.switch-text{
+
+    margin-top:22px;
+
+    text-align:center;
+
+    font-size:11.5px;
+
+    color:var(--muted);
+
+    letter-spacing:0.3px;
+
+}
+
+
+.switch-text span{
+
+    color:var(--maroon);
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    border-bottom:
+        1px dashed
+        rgba(139,0,15,0.4);
+
+}
+
+
+/* ==========================================================
+   MESSAGE
+========================================================== */
+
+.message{
+
+    margin-top:16px;
+
+    text-align:center;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    line-height:1.5;
+
+}
+
+
+.success{
+
+    color:var(--ok);
+
+}
+
+
+.error{
+
+    color:var(--bad);
+
+}
+
+
+.info{
+
+    color:#2563eb;
+
+}
+
+
+/* ==========================================================
+   HIDDEN
+========================================================== */
+
+.hidden{
+
+    display:none;
+
+}
+
+
+/* ==========================================================
+   ANIMATION
+========================================================== */
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(16px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0);
+
+    }
+
+}
+
+
+/* ==========================================================
+   RESPONSIVE
+========================================================== */
+
+@media(max-width:500px){
+
+    .card-body{
+
+        padding:
+            26px
+            22px;
+
+    }
+
+
+    .title{
+
+        font-size:21px;
+
+    }
+
+
+    .card-body h2{
+
+        font-size:18px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <div class="card">
+
+
+        <!-- ==================================================
+             HEADER
+        ================================================== -->
+
+        <div class="card-header">
+
+
+            <div class="eyebrow">
+
+                <span class="dot"></span>
+
+                SECURE ACCESS
+
+            </div>
+
+
+            <div class="logo-wrapper">
+
+                <img
+                    src="AMA Logo.png"
+                    alt="AMA Logo"
+                    class="logo"
+                >
+
+            </div>
+
+
+            <h1 class="title">
+
+                AMACC Faculty Portal
+
+            </h1>
+
+
+            <p class="subtitle">
+
+                FACULTY DASHBOARD LOGIN SYSTEM
+
+            </p>
+
+
+        </div>
+
+
+        <!-- ==================================================
+             LOGIN FORM
+        ================================================== -->
+
+        <div
+            class="card-body"
+            id="loginForm"
+        >
+
+
+            <h2>
+
+                Faculty Login
+
+            </h2>
+
+
+            <div class="form-eyebrow">
+
+                // authenticate to continue
+
+            </div>
+
+
+            <div class="input-group">
+
+
+                <label>
+
+                    Employee Number
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="loginUsername"
+                    placeholder="Enter Employee Number"
+                    autocomplete="username"
+                >
+
+
+            </div>
+
+
+            <div class="input-group">
+
+
+                <label>
+
+                    Password
+
+                </label>
+
+
+                <div class="password-field">
+
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter Password"
+                        autocomplete="current-password"
+                    >
+
+
+                    <span
+                        class="toggle-password"
+                        id="loginPasswordToggle"
+                        onclick="togglePassword(
+                            'loginPassword',
+                            'loginPasswordToggle'
+                        )"
+                    >
+
+                        Show
+
+                    </span>
+
+
+                </div>
+
+
+            </div>
+
+
+            <button
+                class="btn"
+                id="loginBtn"
+                onclick="login()"
+            >
+
+                Login
+
+            </button>
+
+
+            <div class="switch-text">
+
+                Don't have an account?
+
+                <span onclick="showSignup()">
+
+                    Sign Up
+
+                </span>
+
+            </div>
+
+
+            <p
+                id="loginMsg"
+                class="message"
+            ></p>
+
+
+        </div>
+
+
+        <!-- ==================================================
+             SIGN UP FORM
+        ================================================== -->
+
+        <div
+            class="card-body hidden"
+            id="signupForm"
+        >
+
+
+            <h2>
+
+                Create Account
+
+            </h2>
+
+
+            <div class="form-eyebrow">
+
+                // register a new faculty account
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+
+                    Surname
+
+                </label>
+
+                <input
+                    type="text"
+                    id="signupSurname"
+                    placeholder="Enter Surname"
+                    autocomplete="family-name"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+
+                    First Name
+
+                </label>
+
+                <input
+                    type="text"
+                    id="signupFirstName"
+                    placeholder="Enter First Name"
+                    autocomplete="given-name"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+
+                    Middle Name
+
+                </label>
+
+                <input
+                    type="text"
+                    id="signupMiddleName"
+                    placeholder="Enter Middle Name"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+
+                    Employee Number
+
+                </label>
+
+                <input
+                    type="text"
+                    id="signupUsername"
+                    placeholder="Input Employee Number"
+                    autocomplete="username"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+
+                    Email Address
+
+                </label>
+
+                <input
+                    type="email"
+                    id="signupEmail"
+                    placeholder="Enter Email Address"
+                    autocomplete="email"
+                >
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+
+                    Password
+
+                </label>
+
+                <div class="password-field">
+
+                    <input
+                        type="password"
+                        id="signupPassword"
+                        placeholder="Create Password"
+                        autocomplete="new-password"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="input-group">
+
+                <label>
+
+                    Confirm Password
+
+                </label>
+
+                <div class="password-field">
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        placeholder="Confirm Password"
+                        autocomplete="new-password"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <button
+                class="btn"
+                id="signupBtn"
+                onclick="signup()"
+            >
+
+                Create Account
+
+            </button>
+
+
+            <div class="switch-text">
+
+                Already have an account?
+
+                <span onclick="showLogin()">
+
+                    Login
+
+                </span>
+
+            </div>
+
+
+            <p
+                id="signupMsg"
+                class="message"
+            ></p>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- ==========================================================
+     SUPABASE
+========================================================== -->
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+(function(){
+
+
+/* ==========================================================
+   SUPABASE CONFIGURATION
+========================================================== */
+
+const supabaseUrl =
+    "https://sxmqqklyfeyegmlepwbx.supabase.co";
+
+
+const supabaseKey =
+    "sb_publishable_hVHVwb5OeYAI_rUMAq-YIw_dfQJSpvO";
+
+
+const supabase =
+    window.supabase.createClient(
+        supabaseUrl,
+        supabaseKey
+    );
+
+
+console.log(
+    "Supabase Connected"
+);
+
+
+/* ==========================================================
+   PASSWORD TOGGLE
+========================================================== */
+
+window.togglePassword =
+function(inputId, toggleId){
+
+    const input =
+        document.getElementById(
+            inputId
+        );
+
+
+    const toggle =
+        document.getElementById(
+            toggleId
+        );
+
+
+    if(!input || !toggle){
+
+        return;
+
+    }
+
+
+    if(input.type === "password"){
+
+        input.type = "text";
+
+        toggle.innerText = "Hide";
+
+    }
+    else{
+
+        input.type = "password";
+
+        toggle.innerText = "Show";
+
+    }
+
+};
+
+
+/* ==========================================================
+   SHOW SIGNUP
+========================================================== */
+
+window.showSignup =
+function(){
+
+    const loginForm =
+        document.getElementById(
+            "loginForm"
+        );
+
+
+    const signupForm =
+        document.getElementById(
+            "signupForm"
+        );
+
+
+    const loginMsg =
+        document.getElementById(
+            "loginMsg"
+        );
+
+
+    const signupMsg =
+        document.getElementById(
+            "signupMsg"
+        );
+
+
+    loginForm.classList.add(
+        "hidden"
+    );
+
+
+    signupForm.classList.remove(
+        "hidden"
+    );
+
+
+    loginMsg.innerHTML = "";
+
+    signupMsg.innerHTML = "";
+
+};
+
+
+/* ==========================================================
+   SHOW LOGIN
+========================================================== */
+
+window.showLogin =
+function(){
+
+    const loginForm =
+        document.getElementById(
+            "loginForm"
+        );
+
+
+    const signupForm =
+        document.getElementById(
+            "signupForm"
+        );
+
+
+    const loginMsg =
+        document.getElementById(
+            "loginMsg"
+        );
+
+
+    const signupMsg =
+        document.getElementById(
+            "signupMsg"
+        );
+
+
+    signupForm.classList.add(
+        "hidden"
+    );
+
+
+    loginForm.classList.remove(
+        "hidden"
+    );
+
+
+    loginMsg.innerHTML = "";
+
+    signupMsg.innerHTML = "";
+
+};
+
+
+/* ==========================================================
+   SIGN UP
+========================================================== */
+
+window.signup =
+async function(){
+
+
+    const surname =
+        document.getElementById(
+            "signupSurname"
+        ).value.trim();
+
+
+    const firstName =
+        document.getElementById(
+            "signupFirstName"
+        ).value.trim();
+
+
+    const middleName =
+        document.getElementById(
+            "signupMiddleName"
+        ).value.trim();
+
+
+    const employeeNumber =
+        document.getElementById(
+            "signupUsername"
+        ).value.trim();
+
+
+    const email =
+        document.getElementById(
+            "signupEmail"
+        ).value.trim();
+
+
+    const password =
+        document.getElementById(
+            "signupPassword"
+        ).value;
+
+
+    const confirm =
+        document.getElementById(
+            "confirmPassword"
+        ).value;
+
+
+    const msg =
+        document.getElementById(
+            "signupMsg"
+        );
+
+
+    const btn =
+        document.getElementById(
+            "signupBtn"
+        );
+
+
+    /* ------------------------------------------------------
+       VALIDATE FIELDS
+    ------------------------------------------------------ */
+
+    if(
+        surname === "" ||
+        firstName === "" ||
+        middleName === "" ||
+        employeeNumber === "" ||
+        email === "" ||
+        password === "" ||
+        confirm === ""
+    ){
+
+        msg.innerHTML =
+            "<span class='error'>" +
+            "Please fill in all fields." +
+            "</span>";
+
+        return;
+
+    }
+
+
+    /* ------------------------------------------------------
+       VALIDATE EMAIL
+    ------------------------------------------------------ */
+
+    const emailPattern =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+    if(!emailPattern.test(email)){
+
+        msg.innerHTML =
+            "<span class='error'>" +
+            "Please enter a valid email address." +
+            "</span>";
+
+        return;
+
+    }
+
+
+    /* ------------------------------------------------------
+       PASSWORD LENGTH
+    ------------------------------------------------------ */
+
+    if(password.length < 6){
+
+        msg.innerHTML =
+            "<span class='error'>" +
+            "Password must contain at least 6 characters." +
+            "</span>";
+
+        return;
+
+    }
+
+
+    /* ------------------------------------------------------
+       CONFIRM PASSWORD
+    ------------------------------------------------------ */
+
+    if(password !== confirm){
+
+        msg.innerHTML =
+            "<span class='error'>" +
+            "Passwords do not match." +
+            "</span>";
+
+        return;
+
+    }
+
+
+    /* ------------------------------------------------------
+       CREATE FULL NAME
+    ------------------------------------------------------ */
+
+    const fullName =
+        `${firstName} ${middleName} ${surname}`
+            .replace(/\s+/g," ")
+            .trim();
+
+
+    /* ------------------------------------------------------
+       DISABLE BUTTON
+    ------------------------------------------------------ */
+
+    btn.disabled = true;
+
+    msg.innerHTML =
+        "<span class='info'>" +
+        "Creating faculty account..." +
+        "</span>";
+
+
+    try{
+
+
+        /* --------------------------------------------------
+           CALL SUPABASE RPC
+        -------------------------------------------------- */
+
+        const {
+            data,
+            error
+        } = await supabase.rpc(
+            "create_faculty_account",
+            {
+                p_employee_number:
+                    employeeNumber,
+
+                p_full_name:
+                    fullName,
+
+                p_email:
+                    email,
+
+                p_password:
+                    password
+            }
+        );
+
+
+        /* --------------------------------------------------
+           DATABASE ERROR
+        -------------------------------------------------- */
+
+        if(error){
+
+            console.error(
+                "Faculty signup error:",
+                error
+            );
+
+
+            let errorMessage =
+                error.message ||
+                "Unable to create account.";
+
+
+            /* ----------------------------------------------
+               CLEAN COMMON DATABASE ERRORS
+            ---------------------------------------------- */
+
+            if(
+                errorMessage
+                    .toLowerCase()
+                    .includes(
+                        "employee number already exists"
+                    )
+            ){
+
+                errorMessage =
+                    "This Employee Number is already registered.";
+
+            }
+
+
+            else if(
+                errorMessage
+                    .toLowerCase()
+                    .includes(
+                        "email address is already registered"
+                    )
+            ){
+
+                errorMessage =
+                    "This email address is already registered.";
+
+            }
+
+
+            msg.innerHTML =
+                `<span class="error">
+                    ${escapeHTML(errorMessage)}
+                </span>`;
+
+
+            btn.disabled = false;
+
+            return;
+
+        }
+
+
+        /* --------------------------------------------------
+           SUCCESS
+        -------------------------------------------------- */
+
+        console.log(
+            "Faculty account created:",
+            data
+        );
+
+
+        msg.innerHTML =
+            "<span class='success'>" +
+            "Faculty account created successfully." +
+            "</span>";
+
+
+        /* --------------------------------------------------
+           CLEAR SIGNUP FORM
+        -------------------------------------------------- */
+
+        document.getElementById(
+            "signupSurname"
+        ).value = "";
+
+
+        document.getElementById(
+            "signupFirstName"
+        ).value = "";
+
+
+        document.getElementById(
+            "signupMiddleName"
+        ).value = "";
+
+
+        document.getElementById(
+            "signupUsername"
+        ).value = "";
+
+
+        document.getElementById(
+            "signupEmail"
+        ).value = "";
+
+
+        document.getElementById(
+            "signupPassword"
+        ).value = "";
+
+
+        document.getElementById(
+            "confirmPassword"
+        ).value = "";
+
+
+        /* --------------------------------------------------
+           RETURN TO LOGIN
+        -------------------------------------------------- */
+
+        setTimeout(
+            function(){
+
+                showLogin();
+
+                const loginMsg =
+                    document.getElementById(
+                        "loginMsg"
+                    );
+
+
+                loginMsg.innerHTML =
+                    "<span class='success'>" +
+                    "Account created. You may now log in." +
+                    "</span>";
+
+            },
+            1500
+        );
+
+
+    }
+    catch(error){
+
+        console.error(
+            "Unexpected signup error:",
+            error
+        );
+
+
+        msg.innerHTML =
+            `<span class="error">
+                ${escapeHTML(
+                    error.message ||
+                    "Unexpected error occurred."
+                )}
+            </span>`;
+
+    }
+
+
+    btn.disabled = false;
+
+};
+
+
+/* ==========================================================
+   LOGIN
+========================================================== */
+
+window.login =
+async function(){
+
+
+    const employeeNumber =
+        document.getElementById(
+            "loginUsername"
+        ).value.trim();
+
+
+    const password =
+        document.getElementById(
+            "loginPassword"
+        ).value;
+
+
+    const msg =
+        document.getElementById(
+            "loginMsg"
+        );
+
+
+    const btn =
+        document.getElementById(
+            "loginBtn"
+        );
+
+
+    /* ------------------------------------------------------
+       VALIDATE
+    ------------------------------------------------------ */
+
+    if(
+        employeeNumber === "" ||
+        password === ""
+    ){
+
+        msg.innerHTML =
+            "<span class='error'>" +
+            "Please enter your Employee Number and Password." +
+            "</span>";
+
+        return;
+
+    }
+
+
+    btn.disabled = true;
+
+
+    msg.innerHTML =
+        "<span class='info'>" +
+        "Signing in..." +
+        "</span>";
+
+
+    try{
+
+
+        /* --------------------------------------------------
+           VERIFY LOGIN
+        -------------------------------------------------- */
+
+        const {
+            data,
+            error
+        } = await supabase.rpc(
+            "verify_faculty_login",
+            {
+                p_employee_number:
+                    employeeNumber,
+
+                p_password:
+                    password
+            }
+        );
+
+
+        /* --------------------------------------------------
+           DATABASE ERROR
+        -------------------------------------------------- */
+
+        if(error){
+
+            console.error(
+                "Faculty login error:",
+                error
+            );
+
+
+            msg.innerHTML =
+                "<span class='error'>" +
+                "Unable to connect to the Faculty Login system." +
+                "</span>";
+
+
+            btn.disabled = false;
+
+            return;
+
+        }
+
+
+        /* --------------------------------------------------
+           INVALID LOGIN
+        -------------------------------------------------- */
+
+        if(
+            !data ||
+            data.length === 0
+        ){
+
+            msg.innerHTML =
+                "<span class='error'>" +
+                "Invalid Employee Number or Password." +
+                "</span>";
+
+
+            btn.disabled = false;
+
+            return;
+
+        }
+
+
+        /* --------------------------------------------------
+           FACULTY ACCOUNT
+        -------------------------------------------------- */
+
+        const faculty =
+            data[0];
+
+
+        console.log(
+            "Faculty Login:",
+            faculty
+        );
+
+
+        /* --------------------------------------------------
+           SECURITY CHECK
+        -------------------------------------------------- */
+
+        if(
+            faculty.role !== "faculty"
+        ){
+
+            msg.innerHTML =
+                "<span class='error'>" +
+                "This account is not authorized for the Faculty Dashboard." +
+                "</span>";
+
+
+            btn.disabled = false;
+
+            return;
+
+        }
+
+
+        /* --------------------------------------------------
+           SAVE FACULTY SESSION
+        -------------------------------------------------- */
+
+        localStorage.setItem(
+            "faculty",
+            JSON.stringify(
+                faculty
+            )
+        );
+
+
+        localStorage.setItem(
+            "loggedIn",
+            "true"
+        );
+
+
+        msg.innerHTML =
+            "<span class='success'>" +
+            "Login successful. Opening Faculty Dashboard..." +
+            "</span>";
+
+
+        /* --------------------------------------------------
+           REDIRECT
+        -------------------------------------------------- */
+
+        setTimeout(
+            function(){
+
+                window.location.href =
+                    "Faculty-Dashboard.html";
+
+            },
+            800
+        );
+
+
+    }
+    catch(error){
+
+        console.error(
+            "Unexpected login error:",
+            error
+        );
+
+
+        msg.innerHTML =
+            `<span class="error">
+                ${escapeHTML(
+                    error.message ||
+                    "Unexpected login error."
+                )}
+            </span>`;
+
+    }
+
+
+    btn.disabled = false;
+
+};
+
+
+/* ==========================================================
+   ESCAPE HTML
+========================================================== */
+
+function escapeHTML(value){
+
+    if(
+        value === null ||
+        value === undefined
+    ){
+
+        return "";
+
+    }
+
+
+    return String(value)
+
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+
+        .replace(
+            /</g,
+            "&lt;"
+        )
+
+        .replace(
+            />/g,
+            "&gt;"
+        )
+
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* ==========================================================
+   ENTER KEY SUPPORT
+========================================================== */
+
+document.addEventListener(
+    "keydown",
+    function(event){
+
+        if(
+            event.key !== "Enter"
+        ){
+
+            return;
+
+        }
+
+
+        const loginForm =
+            document.getElementById(
+                "loginForm"
+            );
+
+
+        const signupForm =
+            document.getElementById(
+                "signupForm"
+            );
+
+
+        /* ----------------------------------------------
+           LOGIN
+        ---------------------------------------------- */
+
+        if(
+            !loginForm.classList.contains(
+                "hidden"
+            )
+        ){
+
+            login();
+
+        }
+
+
+        /* ----------------------------------------------
+           SIGNUP
+        ---------------------------------------------- */
+
+        else if(
+            !signupForm.classList.contains(
+                "hidden"
+            )
+        ){
+
+            signup();
+
+        }
+
+    }
+);
+
+
+})();
+
+</script>
+
+
+</body>
+
+</html>

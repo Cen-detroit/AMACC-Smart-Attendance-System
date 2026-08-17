@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AMACC Admin Login</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{min-height:100vh;display:flex;justify-content:center;align-items:center;overflow:hidden;background:linear-gradient(135deg,rgba(91,15,15,.96),rgba(145,20,20,.96));position:relative}
+.circle1{position:absolute;width:380px;height:380px;background:rgba(255,255,255,.08);border-radius:50%;top:-120px;left:-120px;filter:blur(5px)}
+.circle2{position:absolute;width:320px;height:320px;background:rgba(255,255,255,.08);border-radius:50%;bottom:-100px;right:-100px;filter:blur(5px)}
+.login-card{width:420px;border-radius:28px;overflow:hidden;background:rgba(255,255,255,.12);backdrop-filter:blur(12px);box-shadow:0 10px 40px rgba(0,0,0,.25);position:relative;z-index:10;animation:fadeIn .7s ease}
+.top-section{padding:35px 30px 25px;text-align:center;background:rgba(255,255,255,.08)}
+.logo-circle{width:120px;height:120px;background:white;border-radius:50%;margin:0 auto 20px;display:flex;justify-content:center;align-items:center;box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.logo-circle img{width:75px;object-fit:contain}
+.top-section h1{color:white;font-size:24px;margin-bottom:8px}
+.top-section p{color:#f3f4f6;font-size:14px;letter-spacing:1px}
+.form-section{background:#f9fafb;padding:35px;border-top-left-radius:35px;border-top-right-radius:35px}
+.form-section h2{text-align:center;color:#7b1113;margin-bottom:25px;font-size:38px}
+.input-group{margin-bottom:20px}
+.input-group label{display:block;margin-bottom:8px;font-weight:bold;color:#374151;font-size:14px}
+.input-group input{width:100%;padding:15px;border-radius:14px;border:1px solid #d1d5db;outline:none;background:#f3f4f6;font-size:15px;transition:.3s}
+.input-group input:focus{border-color:#7b1113;box-shadow:0 0 0 4px rgba(123,17,19,.15);background:white}
+.login-btn{width:100%;padding:15px;border:none;border-radius:15px;background:linear-gradient(135deg,#8b0000,#c1121f);color:white;font-size:17px;font-weight:bold;cursor:pointer;transition:.3s;margin-top:10px}
+.login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(139,0,0,.3)}
+.login-btn:disabled{opacity:.7;cursor:not-allowed;transform:none}
+.error-message{margin-top:18px;text-align:center;color:#dc2626;font-size:14px;display:none}
+.footer{margin-top:20px;text-align:center;color:#6b7280;font-size:13px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:500px){.login-card{width:92%}.form-section{padding:25px}.form-section h2{font-size:30px}}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="js/supabase.js"></script>
+</head>
+<body>
+<div class="circle1"></div>
+<div class="circle2"></div>
+<div class="login-card">
+<div class="top-section">
+<div class="logo-circle"><img src="images/AMA Logo.png" alt="AMA Logo"></div>
+<h1>AMACC Admin Control Center</h1>
+<p>ADMINISTRATOR LOGIN SYSTEM</p>
+</div>
+<form class="form-section" id="loginForm">
+<h2>Admin Login</h2>
+<div class="input-group">
+<label for="email">Email</label>
+<input type="email" id="email" name="email" placeholder="Enter Admin Email" autocomplete="username" required>
+</div>
+<div class="input-group">
+<label for="password">Password</label>
+<input type="password" id="password" name="password" placeholder="Enter Password" autocomplete="current-password" required>
+</div>
+<button type="submit" class="login-btn" id="loginBtn">Login</button>
+<div class="error-message" id="errorMessage" role="alert">❌ Invalid Email or Password</div>
+<div class="footer">© 2026 AMACC System Control Center</div>
+</form>
+</div>
+<script>
+const loginForm=document.getElementById("loginForm");
+const errorMessage=document.getElementById("errorMessage");
+const loginBtn=document.getElementById("loginBtn");
+
+loginForm.addEventListener("submit",async e=>{
+e.preventDefault();
+const email=document.getElementById("email").value.trim();
+const password=document.getElementById("password").value;
+errorMessage.style.display="none";
+loginBtn.disabled=true;
+loginBtn.textContent="Logging in...";
+
+try{
+const result=await authenticateAdmin(email,password);
+if(!result.success){
+errorMessage.textContent="❌ "+result.message;
+errorMessage.style.display="block";
+loginBtn.disabled=false;
+loginBtn.textContent="Login";
+return;
+}
+
+const {data:{user},error:userError}=await sb.auth.getUser();
+if(userError||!user){
+throw new Error("Unable to verify administrator account.");
+}
+
+const {data:admin,error:adminError}=await sb.from("admin_accounts").select("*").eq("auth_user_id",user.id).maybeSingle();
+
+if(adminError||!admin){
+await sb.auth.signOut();
+errorMessage.textContent="❌ This account is not registered as an administrator.";
+errorMessage.style.display="block";
+loginBtn.disabled=false;
+loginBtn.textContent="Login";
+return;
+}
+
+localStorage.setItem("admin",JSON.stringify(admin));
+window.location.href="Admin-Dashboard.html";
+}catch(error){
+console.error("Admin login error:",error);
+errorMessage.textContent="❌ "+(error.message||"Unable to login.");
+errorMessage.style.display="block";
+loginBtn.disabled=false;
+loginBtn.textContent="Login";
+}
+});
+</script>
+</body>
+</html>
