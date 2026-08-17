@@ -1,4 +1,28 @@
 {
-  "cleanUrls": true,
-  "trailingSlash": true
+  "rewrites": [
+    {
+      "source": "/attendance",
+      "destination": "/attendance/index.html"
+    },
+    {
+      "source": "/attendance/",
+      "destination": "/attendance/index.html"
+    },
+    {
+      "source": "/faculty",
+      "destination": "/faculty/index.html"
+    },
+    {
+      "source": "/faculty/",
+      "destination": "/faculty/index.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/",
+      "destination": "/admin/index.html"
+    }
+  ]
 }
