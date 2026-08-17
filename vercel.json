@@ -1,16 +1,4 @@
 {
-  "rewrites": [
-    {
-      "source": "/attendance",
-      "destination": "/attendance/Login.html"
-    },
-    {
-      "source": "/faculty",
-      "destination": "/faculty/index.html"
-    },
-    {
-      "source": "/admin",
-      "destination": "/admin/index.html"
-    }
-  ]
+  "cleanUrls": false,
+  "trailingSlash": false
 }
