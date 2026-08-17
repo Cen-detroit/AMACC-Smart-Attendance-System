@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="visibility:hidden;">
 
 <head>
 
@@ -529,11 +529,113 @@
 
 
 <!-- =========================================================
-     SUPABASE
+     SUPABASE LIBRARY
 ========================================================= -->
 
 <script
     src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
+</script>
+
+
+
+<!-- =========================================================
+     AUTHENTICATION GUARD
+========================================================= -->
+
+<script>
+
+const AUTH_SUPABASE_URL =
+    "https://sxmqqklyfeyegmlepwbx.supabase.co";
+
+const AUTH_SUPABASE_PUBLISHABLE_KEY =
+    "sb_publishable_hVHVwb5OeYAI_rUMAq-YIw_dfQJSpvO";
+
+
+const authClient =
+    window.supabase.createClient(
+        AUTH_SUPABASE_URL,
+        AUTH_SUPABASE_PUBLISHABLE_KEY,
+        {
+            auth: {
+                persistSession: true,
+                autoRefreshToken: true
+            }
+        }
+    );
+
+
+async function protectAttendancePage() {
+
+    try {
+
+        const {
+            data,
+            error
+        } =
+            await authClient.auth.getUser();
+
+
+        if (
+            error ||
+            !data ||
+            !data.user
+        ) {
+
+            window.location.replace(
+                "Login.html"
+            );
+
+            return;
+
+        }
+
+
+        document.documentElement.style.visibility =
+            "visible";
+
+
+    } catch (error) {
+
+        console.error(
+            "Authentication check failed:",
+            error
+        );
+
+        window.location.replace(
+            "Login.html"
+        );
+
+    }
+
+}
+
+
+async function logout() {
+
+    try {
+
+        await authClient.auth.signOut();
+
+    } catch (error) {
+
+        console.error(
+            "Logout error:",
+            error
+        );
+
+    } finally {
+
+        window.location.replace(
+            "Login.html"
+        );
+
+    }
+
+}
+
+
+protectAttendancePage();
+
 </script>
 
 
