@@ -8,17 +8,18 @@
    SUPABASE CONFIGURATION
 ========================================================= */
 
-const SUPABASE_URL = "https://sxmqqklyfeyegmlepwbx.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_hVHVwb5OeYAI_rUMAq-YIw_dfQJSpvO";
+const SUPABASE_URL =
+    "https://sxmqqklyfeyegmlepwbx.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_hVHVwb5OeYAI_rUMAq-YIw_dfQJSpvO";
 
 
 /* =========================================================
    INITIALIZE SUPABASE
 ========================================================= */
 
-if (
-    typeof window.supabase === "undefined"
-) {
+if (typeof window.supabase === "undefined") {
 
     console.error(
         "Supabase JavaScript library was not loaded."
@@ -44,9 +45,7 @@ if (
             "Supabase initialization failed:",
             error
         );
-
     }
-
 }
 
 
@@ -88,27 +87,224 @@ function getPhilippineDate() {
 
 
 /* =========================================================
+   ADMIN AUTHENTICATION
+========================================================= */
+
+async function authenticateAdmin(email, password) {
+
+    if (!checkSupabaseClient()) {
+
+        return {
+            success: false,
+            message: "Supabase connection is unavailable.",
+            user: null,
+            admin: null
+        };
+    }
+
+    try {
+
+        if (!email || !password) {
+
+            return {
+                success: false,
+                message: "Please enter your email and password.",
+                user: null,
+                admin: null
+            };
+        }
+
+
+        /* -----------------------------------------
+           SIGN IN WITH SUPABASE AUTH
+        ----------------------------------------- */
+
+        const {
+            data: authData,
+            error: authError
+        } = await window.sb.auth.signInWithPassword({
+            email: email.trim(),
+            password: password
+        });
+
+
+        if (authError) {
+
+            console.error(
+                "Admin authentication error:",
+                authError
+            );
+
+            let message =
+                authError.message ||
+                "Unable to login.";
+
+            if (
+                message
+                    .toLowerCase()
+                    .includes("invalid login credentials")
+            ) {
+
+                message =
+                    "Invalid email or password.";
+            }
+
+            return {
+                success: false,
+                message: message,
+                user: null,
+                admin: null
+            };
+        }
+
+
+        if (
+            !authData ||
+            !authData.user ||
+            !authData.session
+        ) {
+
+            return {
+                success: false,
+                message:
+                    "Unable to create administrator session.",
+                user: null,
+                admin: null
+            };
+        }
+
+
+        const user = authData.user;
+
+
+        /* -----------------------------------------
+           VERIFY ADMIN ACCOUNT
+        ----------------------------------------- */
+
+        const {
+            data: admin,
+            error: adminError
+        } = await window.sb
+            .from("admin_accounts")
+            .select("*")
+            .eq(
+                "auth_user_id",
+                user.id
+            )
+            .maybeSingle();
+
+
+        if (adminError) {
+
+            console.error(
+                "Administrator verification error:",
+                adminError
+            );
+
+            await window.sb.auth.signOut();
+
+            return {
+                success: false,
+                message:
+                    "Unable to verify administrator account.",
+                user: null,
+                admin: null
+            };
+        }
+
+
+        if (!admin) {
+
+            console.warn(
+                "Authenticated user is not in admin_accounts:",
+                user.id
+            );
+
+            await window.sb.auth.signOut();
+
+            return {
+                success: false,
+                message:
+                    "This account is not registered as an administrator.",
+                user: null,
+                admin: null
+            };
+        }
+
+
+        /* -----------------------------------------
+           SAVE LOCAL ADMIN STATE
+        ----------------------------------------- */
+
+        localStorage.setItem(
+            "loggedIn",
+            "true"
+        );
+
+        localStorage.setItem(
+            "admin",
+            JSON.stringify(admin)
+        );
+
+
+        console.log(
+            "Administrator authenticated successfully:",
+            user.email
+        );
+
+
+        return {
+            success: true,
+            message: "Login successful.",
+            user: user,
+            admin: admin,
+            session: authData.session
+        };
+
+
+    } catch (error) {
+
+        console.error(
+            "Admin authentication exception:",
+            error
+        );
+
+        return {
+            success: false,
+            message:
+                error.message ||
+                "Unable to login.",
+            user: null,
+            admin: null
+        };
+    }
+}
+
+
+/* =========================================================
    FACULTY PROFILE
 ========================================================= */
 
 async function getFacultyProfile(id) {
 
     if (!checkSupabaseClient()) {
+
         return {
             data: null,
-            error: new Error("Supabase client is not initialized.")
+            error: new Error(
+                "Supabase client is not initialized."
+            )
         };
     }
 
     try {
 
-        return await window.sb
-            .rpc(
-                "get_faculty_profile",
-                {
-                    p_id: id
-                }
-            );
+        return await window.sb.rpc(
+            "get_faculty_profile",
+            {
+                p_id: id
+            }
+        );
 
     } catch (error) {
 
@@ -158,6 +354,7 @@ async function loadFaculty() {
                 }
             );
 
+
         if (error) {
 
             console.error(
@@ -168,7 +365,9 @@ async function loadFaculty() {
             return [];
         }
 
+
         return data || [];
+
 
     } catch (error) {
 
@@ -214,6 +413,7 @@ async function getFaculty(facultyId) {
             )
             .maybeSingle();
 
+
         if (error) {
 
             console.error(
@@ -224,7 +424,9 @@ async function getFaculty(facultyId) {
             return null;
         }
 
+
         return data || null;
+
 
     } catch (error) {
 
@@ -263,6 +465,7 @@ async function loadStudents() {
                 }
             );
 
+
         if (error) {
 
             console.error(
@@ -273,7 +476,9 @@ async function loadStudents() {
             return [];
         }
 
+
         return data || [];
+
 
     } catch (error) {
 
@@ -302,6 +507,7 @@ async function getStudents() {
             )
         };
     }
+
 
     return await window.sb
         .from("students")
@@ -339,6 +545,7 @@ async function getStudent(studentId) {
             )
             .maybeSingle();
 
+
         if (error) {
 
             console.error(
@@ -349,7 +556,9 @@ async function getStudent(studentId) {
             return null;
         }
 
+
         return data || null;
+
 
     } catch (error) {
 
@@ -378,6 +587,7 @@ async function getStudentByNumber(studentNumber) {
             )
         };
     }
+
 
     return await window.sb
         .from("students")
@@ -425,6 +635,7 @@ async function updateStudent(
             .select()
             .maybeSingle();
 
+
         if (error) {
 
             console.error(
@@ -439,11 +650,13 @@ async function updateStudent(
             };
         }
 
+
         return {
             success: true,
             data: data || null,
             error: null
         };
+
 
     } catch (error) {
 
@@ -465,7 +678,9 @@ async function updateStudent(
    DELETE STUDENT
 ========================================================= */
 
-async function deleteStudentFromDatabase(studentId) {
+async function deleteStudentFromDatabase(
+    studentId
+) {
 
     if (!checkSupabaseClient()) {
 
@@ -489,6 +704,7 @@ async function deleteStudentFromDatabase(studentId) {
                 studentId
             );
 
+
         if (error) {
 
             console.error(
@@ -502,10 +718,12 @@ async function deleteStudentFromDatabase(studentId) {
             };
         }
 
+
         return {
             success: true,
             error: null
         };
+
 
     } catch (error) {
 
@@ -544,6 +762,7 @@ async function uploadStudentPhoto(file) {
                 .pop()
                 .toLowerCase();
 
+
         const fileName =
             "student-" +
             Date.now() +
@@ -554,12 +773,15 @@ async function uploadStudentPhoto(file) {
             "." +
             extension;
 
+
         const filePath =
             "students/" +
             fileName;
 
+
         const bucketName =
             "student-photos";
+
 
         const {
             error: uploadError
@@ -574,6 +796,7 @@ async function uploadStudentPhoto(file) {
                 }
             );
 
+
         if (uploadError) {
 
             console.error(
@@ -584,6 +807,7 @@ async function uploadStudentPhoto(file) {
             return null;
         }
 
+
         const {
             data
         } = window.sb.storage
@@ -592,7 +816,9 @@ async function uploadStudentPhoto(file) {
                 filePath
             );
 
+
         return data?.publicUrl || null;
+
 
     } catch (error) {
 
@@ -620,6 +846,7 @@ async function loadTodayAttendance() {
 
         const today =
             getPhilippineDate();
+
 
         const {
             data,
@@ -654,6 +881,7 @@ async function loadTodayAttendance() {
                 }
             );
 
+
         if (error) {
 
             console.error(
@@ -664,7 +892,9 @@ async function loadTodayAttendance() {
             return [];
         }
 
+
         return data || [];
+
 
     } catch (error) {
 
@@ -694,9 +924,11 @@ async function getTodayAttendance(today) {
         };
     }
 
+
     const attendanceDate =
         today ||
         getPhilippineDate();
+
 
     return await window.sb
         .from("attendance_records")
@@ -740,9 +972,11 @@ async function getStudentAttendance(
         };
     }
 
+
     const attendanceDate =
         today ||
         getPhilippineDate();
+
 
     return await window.sb
         .from("attendance_records")
@@ -782,6 +1016,7 @@ async function insertAttendance(data) {
         };
     }
 
+
     return await window.sb
         .from("attendance_records")
         .insert(data)
@@ -805,6 +1040,7 @@ async function updateTimeOut(id) {
             )
         };
     }
+
 
     return await window.sb
         .from("attendance_records")
@@ -837,9 +1073,11 @@ async function getAttendanceWithStudents(today) {
         };
     }
 
+
     const attendanceDate =
         today ||
         getPhilippineDate();
+
 
     return await window.sb
         .from("attendance_records")
@@ -889,9 +1127,11 @@ async function getRecentAttendance(today) {
         };
     }
 
+
     const attendanceDate =
         today ||
         getPhilippineDate();
+
 
     return await window.sb
         .from("attendance_records")
@@ -943,6 +1183,7 @@ async function getCurrentAdmin() {
             error
         } = await window.sb.auth.getSession();
 
+
         if (error) {
 
             console.error(
@@ -953,7 +1194,9 @@ async function getCurrentAdmin() {
             return null;
         }
 
+
         return data?.session || null;
+
 
     } catch (error) {
 
@@ -984,6 +1227,7 @@ async function getCurrentUser() {
             error
         } = await window.sb.auth.getUser();
 
+
         if (error) {
 
             console.error(
@@ -994,7 +1238,9 @@ async function getCurrentUser() {
             return null;
         }
 
+
         return data?.user || null;
+
 
     } catch (error) {
 
@@ -1022,6 +1268,7 @@ async function logoutAdmin() {
                 error
             } = await window.sb.auth.signOut();
 
+
             if (error) {
 
                 console.error(
@@ -1040,12 +1287,21 @@ async function logoutAdmin() {
 
     } finally {
 
-        localStorage.removeItem("faculty");
-        localStorage.removeItem("loggedIn");
-        localStorage.removeItem("admin");
+        localStorage.removeItem(
+            "faculty"
+        );
+
+        localStorage.removeItem(
+            "loggedIn"
+        );
+
+        localStorage.removeItem(
+            "admin"
+        );
+
 
         window.location.replace(
-            "Login.html"
+            "login.html"
         );
     }
 }
@@ -1061,6 +1317,15 @@ window.checkSupabaseClient =
 window.getPhilippineDate =
     getPhilippineDate;
 
+
+/* ADMIN LOGIN */
+
+window.authenticateAdmin =
+    authenticateAdmin;
+
+
+/* FACULTY */
+
 window.getFacultyProfile =
     getFacultyProfile;
 
@@ -1069,6 +1334,9 @@ window.loadFaculty =
 
 window.getFaculty =
     getFaculty;
+
+
+/* STUDENTS */
 
 window.loadStudents =
     loadStudents;
@@ -1091,6 +1359,9 @@ window.deleteStudentFromDatabase =
 window.uploadStudentPhoto =
     uploadStudentPhoto;
 
+
+/* ATTENDANCE */
+
 window.loadTodayAttendance =
     loadTodayAttendance;
 
@@ -1112,6 +1383,9 @@ window.getAttendanceWithStudents =
 window.getRecentAttendance =
     getRecentAttendance;
 
+
+/* SESSION */
+
 window.getCurrentAdmin =
     getCurrentAdmin;
 
@@ -1120,3 +1394,8 @@ window.getCurrentUser =
 
 window.logoutAdmin =
     logoutAdmin;
+
+
+console.log(
+    "AMA Supabase JavaScript loaded successfully."
+);
