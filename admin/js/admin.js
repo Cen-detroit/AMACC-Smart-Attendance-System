@@ -21,31 +21,52 @@ let currentAdminProfile = null;
    INITIALIZATION
 ========================================================= */
 
-document.addEventListener("DOMContentLoaded", async function () {
+document.addEventListener(
+    "DOMContentLoaded",
+    async function () {
 
-    console.log("======================================");
-    console.log("AMA ADMIN DASHBOARD");
-    console.log("Initializing...");
-    console.log("======================================");
-
-    startClock();
-
-    setupStudentFilters();
-    setupAttendanceFilters();
-    setupImageUpload();
-
-    if (!checkSupabaseClient()) {
-
-        showDashboardError(
-            "Supabase client is unavailable. Check js/supabase.js."
+        console.log(
+            "======================================"
         );
 
-        return;
+        console.log(
+            "AMA ADMIN DASHBOARD"
+        );
+
+        console.log(
+            "Initializing..."
+        );
+
+        console.log(
+            "======================================"
+        );
+
+
+        startClock();
+
+        setupStudentFilters();
+
+        setupAttendanceFilters();
+
+        setupImageUpload();
+
+
+        if (
+            typeof checkSupabaseClient !== "function" ||
+            !checkSupabaseClient()
+        ) {
+
+            showDashboardError(
+                "Supabase client is unavailable. Check js/supabase.js."
+            );
+
+            return;
+        }
+
+
+        await initializeAdminDashboard();
     }
-
-    await initializeAdminDashboard();
-
-});
+);
 
 
 /* =========================================================
@@ -60,8 +81,10 @@ async function initializeAdminDashboard() {
             "Checking administrator session..."
         );
 
+
         const session =
             await getCurrentAdmin();
+
 
         if (!session) {
 
@@ -69,21 +92,35 @@ async function initializeAdminDashboard() {
                 "No active Supabase session."
             );
 
-            /*
-             * Do not immediately redirect while debugging.
-             * This allows the dashboard to display the
-             * actual authentication problem.
-             */
 
             showDashboardError(
                 "No administrator session is active."
             );
 
+
+            /*
+             * Redirect to login after a short delay.
+             */
+
+            setTimeout(
+                function () {
+
+                    window.location.replace(
+                        "login.html"
+                    );
+
+                },
+                2000
+            );
+
+
             return;
         }
 
+
         currentAdminUser =
             session.user;
+
 
         console.log(
             "Authenticated user:",
@@ -95,9 +132,11 @@ async function initializeAdminDashboard() {
 
         await loadDashboard();
 
+
         console.log(
             "Administrator dashboard loaded successfully."
         );
+
 
     } catch (error) {
 
@@ -105,6 +144,7 @@ async function initializeAdminDashboard() {
             "Dashboard initialization error:",
             error
         );
+
 
         showDashboardError(
             "Dashboard loading error: " +
@@ -134,6 +174,7 @@ function updateClock() {
     const now =
         new Date();
 
+
     const formatter =
         new Intl.DateTimeFormat(
             "en-US",
@@ -150,13 +191,17 @@ function updateClock() {
             }
         );
 
+
     const parts =
         formatter.formatToParts(now);
 
+
     const values = {};
 
+
     parts.forEach(
-        part => {
+        function (part) {
+
             values[part.type] =
                 part.value;
         }
@@ -168,10 +213,12 @@ function updateClock() {
             "currentDay"
         );
 
+
     const date =
         document.getElementById(
             "currentDate"
         );
+
 
     const time =
         document.getElementById(
@@ -202,7 +249,7 @@ function updateClock() {
 
 
 /* =========================================================
-   ADMIN PROFILE
+   ADMINISTRATOR PROFILE
 ========================================================= */
 
 async function loadAdministratorProfile() {
@@ -214,26 +261,67 @@ async function loadAdministratorProfile() {
         }
 
 
-        const profile =
-            await getFacultyProfile(
-                currentAdminUser.id
-            );
-
-
         if (
-            profile &&
-            profile.data
+            typeof getFacultyProfile ===
+            "function"
         ) {
 
-            currentAdminProfile =
-                Array.isArray(profile.data)
-                    ? profile.data[0]
-                    : profile.data;
+            const profile =
+                await getFacultyProfile(
+                    currentAdminUser.id
+                );
 
+
+            if (
+                profile &&
+                profile.data
+            ) {
+
+                currentAdminProfile =
+                    Array.isArray(
+                        profile.data
+                    )
+                        ? profile.data[0]
+                        : profile.data;
+            }
+        }
+
+
+        /*
+         * If faculty profile was not found,
+         * try local admin information.
+         */
+
+        if (!currentAdminProfile) {
+
+            try {
+
+                const storedAdmin =
+                    localStorage.getItem(
+                        "admin"
+                    );
+
+
+                if (storedAdmin) {
+
+                    currentAdminProfile =
+                        JSON.parse(
+                            storedAdmin
+                        );
+                }
+
+            } catch (error) {
+
+                console.warn(
+                    "Unable to read local admin profile.",
+                    error
+                );
+            }
         }
 
 
         updateAdministratorUI();
+
 
     } catch (error) {
 
@@ -241,6 +329,7 @@ async function loadAdministratorProfile() {
             "Administrator profile loading error:",
             error
         );
+
 
         updateAdministratorUI();
     }
@@ -257,8 +346,13 @@ function updateAdministratorUI() {
 
     const name =
         currentAdminProfile?.full_name ||
-        currentAdminUser?.user_metadata?.full_name ||
-        currentAdminUser?.user_metadata?.name ||
+        currentAdminProfile?.name ||
+        currentAdminUser
+            ?.user_metadata
+            ?.full_name ||
+        currentAdminUser
+            ?.user_metadata
+            ?.name ||
         "Administrator";
 
 
@@ -267,15 +361,18 @@ function updateAdministratorUI() {
             "adminNamePreview"
         );
 
+
     const emailPreview =
         document.getElementById(
             "adminEmailPreview"
         );
 
+
     const nameInput =
         document.getElementById(
             "adminName"
         );
+
 
     const emailInput =
         document.getElementById(
@@ -311,28 +408,31 @@ function updateAdministratorUI() {
     }
 
 
-    if (
-        currentAdminUser?.user_metadata?.avatar_url
-    ) {
+    const avatar =
+        currentAdminUser
+            ?.user_metadata
+            ?.avatar_url;
+
+
+    if (avatar) {
 
         const preview =
             document.getElementById(
                 "adminPreview"
             );
 
+
         if (preview) {
 
             preview.src =
-                currentAdminUser
-                    .user_metadata
-                    .avatar_url;
+                avatar;
         }
     }
 }
 
 
 /* =========================================================
-   DASHBOARD
+   LOAD DASHBOARD
 ========================================================= */
 
 async function loadDashboard() {
@@ -344,16 +444,46 @@ async function loadDashboard() {
         );
 
 
-        allStudents =
+        /* =========================
+           LOAD STUDENTS
+        ========================= */
+
+        const studentsResult =
             await loadStudents();
 
 
-        allFaculty =
+        allStudents =
+            Array.isArray(studentsResult)
+                ? studentsResult
+                : [];
+
+
+        /* =========================
+           LOAD FACULTY
+        ========================= */
+
+        const facultyResult =
             await loadFaculty();
 
 
-        allAttendance =
+        allFaculty =
+            Array.isArray(facultyResult)
+                ? facultyResult
+                : [];
+
+
+        /* =========================
+           LOAD ATTENDANCE
+        ========================= */
+
+        const attendanceResult =
             await loadTodayAttendance();
+
+
+        allAttendance =
+            Array.isArray(attendanceResult)
+                ? attendanceResult
+                : [];
 
 
         console.log(
@@ -380,6 +510,7 @@ async function loadDashboard() {
 
         renderRecentAttendance();
 
+
     } catch (error) {
 
         console.error(
@@ -387,8 +518,10 @@ async function loadDashboard() {
             error
         );
 
+
         showDashboardError(
-            error.message
+            error.message ||
+            "Unable to load dashboard."
         );
     }
 }
@@ -400,35 +533,102 @@ async function loadDashboard() {
 
 function updateDashboardStatistics() {
 
-    const totalStudents =
-        allStudents.length;
+    const students =
+        Array.isArray(allStudents)
+            ? allStudents
+            : [];
 
+
+    const faculty =
+        Array.isArray(allFaculty)
+            ? allFaculty
+            : [];
+
+
+    const attendance =
+        Array.isArray(allAttendance)
+            ? allAttendance
+            : [];
+
+
+    /* =====================================================
+       TOTAL STUDENTS
+    ===================================================== */
+
+    const totalStudents =
+        students.length;
+
+
+    /* =====================================================
+       TOTAL FACULTY
+    ===================================================== */
 
     const totalFaculty =
-        allFaculty.length;
+        faculty.length;
 
+
+    /* =====================================================
+       COLLEGE STUDENTS
+    ===================================================== */
 
     const collegeStudents =
-        allStudents.filter(
-            student =>
-                normalize(
-                    student.department
-                ) === "college"
+        students.filter(
+            function (student) {
+
+                const department =
+                    normalize(
+                        student.department
+                    );
+
+
+                return (
+                    department === "college" ||
+                    department.includes(
+                        "college"
+                    )
+                );
+            }
         ).length;
 
+
+    /* =====================================================
+       SENIOR HIGH SCHOOL STUDENTS
+    ===================================================== */
 
     const shsStudents =
-        allStudents.filter(
-            student =>
-                normalize(
-                    student.department
-                ) === "shs"
+        students.filter(
+            function (student) {
+
+                const department =
+                    normalize(
+                        student.department
+                    );
+
+
+                return (
+                    department === "shs" ||
+                    department.includes(
+                        "shs"
+                    ) ||
+                    department.includes(
+                        "senior high"
+                    )
+                );
+            }
         ).length;
 
 
-    const todayAttendance =
-        allAttendance.length;
+    /* =====================================================
+       ATTENDANCE TODAY
+    ===================================================== */
 
+    const todayAttendance =
+        attendance.length;
+
+
+    /* =====================================================
+       DISPLAY COUNTERS
+    ===================================================== */
 
     setText(
         "totalStudents",
@@ -457,6 +657,64 @@ function updateDashboardStatistics() {
     setText(
         "todayAttendance",
         todayAttendance
+    );
+
+
+    /* =====================================================
+       DEBUGGING
+    ===================================================== */
+
+    console.log(
+        "======================================"
+    );
+
+    console.log(
+        "DASHBOARD STATISTICS"
+    );
+
+    console.log(
+        "======================================"
+    );
+
+    console.log(
+        "Total Students:",
+        totalStudents
+    );
+
+    console.log(
+        "College Students:",
+        collegeStudents
+    );
+
+    console.log(
+        "SHS Students:",
+        shsStudents
+    );
+
+    console.log(
+        "Total Faculty:",
+        totalFaculty
+    );
+
+    console.log(
+        "Attendance Today:",
+        todayAttendance
+    );
+
+
+    console.log(
+        "Student Departments:",
+        students.map(
+            function (student) {
+
+                return student.department;
+            }
+        )
+    );
+
+
+    console.log(
+        "======================================"
     );
 }
 
@@ -489,16 +747,25 @@ function renderRecentStudents() {
 
         container.innerHTML = `
             <div class="class-item">
+
                 <div>
-                    <strong>No students yet</strong>
+
+                    <strong>
+                        No students yet
+                    </strong>
+
                     <br>
+
                     <small>
                         Recently registered students
                         will appear here.
                     </small>
+
                 </div>
+
             </div>
         `;
+
 
         return;
     }
@@ -506,7 +773,7 @@ function renderRecentStudents() {
 
     container.innerHTML =
         students.map(
-            student => {
+            function (student) {
 
                 const name =
                     escapeHTML(
@@ -587,13 +854,14 @@ function renderRecentAttendance() {
             </div>
         `;
 
+
         return;
     }
 
 
     container.innerHTML =
         records.map(
-            record => {
+            function (record) {
 
                 const student =
                     record.students ||
@@ -640,8 +908,7 @@ function renderRecentAttendance() {
 
                             <small>
                                 ${studentNumber}
-                                •
-                                Time In:
+                                • Time In:
                                 ${timeIn}
                             </small>
 
@@ -678,12 +945,13 @@ async function showSection(
 
 
     sections.forEach(
-        name => {
+        function (name) {
 
             const element =
                 document.getElementById(
                     name + "Section"
                 );
+
 
             if (element) {
 
@@ -727,7 +995,7 @@ async function showSection(
             ".menu-link"
         )
         .forEach(
-            link => {
+            function (link) {
 
                 link.classList.remove(
                     "active"
@@ -750,11 +1018,13 @@ async function showSection(
 
             await loadDashboard();
 
+
         } else if (
             section === "students"
         ) {
 
             await loadStudentsSection();
+
 
         } else if (
             section === "faculty"
@@ -762,11 +1032,13 @@ async function showSection(
 
             await loadFacultySection();
 
+
         } else if (
             section === "attendance"
         ) {
 
             await loadAttendanceSection();
+
 
         } else if (
             section === "settings"
@@ -774,6 +1046,7 @@ async function showSection(
 
             updateAdministratorUI();
         }
+
 
     } catch (error) {
 
@@ -793,13 +1066,20 @@ async function loadStudentsSection() {
 
     try {
 
-        allStudents =
+        const result =
             await loadStudents();
+
+
+        allStudents =
+            Array.isArray(result)
+                ? result
+                : [];
 
 
         populateStudentFilterOptions();
 
         renderStudentsTable();
+
 
     } catch (error) {
 
@@ -810,6 +1090,10 @@ async function loadStudentsSection() {
     }
 }
 
+
+/* =========================================================
+   STUDENT TABLE
+========================================================= */
 
 function renderStudentsTable() {
 
@@ -862,12 +1146,17 @@ function renderStudentsTable() {
 
         students =
             students.filter(
-                student =>
-                    normalize(
-                        student.department
-                    ) === normalize(
-                        department
-                    )
+                function (student) {
+
+                    return (
+                        normalize(
+                            student.department
+                        ) ===
+                        normalize(
+                            department
+                        )
+                    );
+                }
             );
     }
 
@@ -876,12 +1165,17 @@ function renderStudentsTable() {
 
         students =
             students.filter(
-                student =>
-                    normalize(
-                        student.course
-                    ) === normalize(
-                        course
-                    )
+                function (student) {
+
+                    return (
+                        normalize(
+                            student.course
+                        ) ===
+                        normalize(
+                            course
+                        )
+                    );
+                }
             );
     }
 
@@ -890,12 +1184,17 @@ function renderStudentsTable() {
 
         students =
             students.filter(
-                student =>
-                    normalize(
-                        student.major
-                    ) === normalize(
-                        major
-                    )
+                function (student) {
+
+                    return (
+                        normalize(
+                            student.major
+                        ) ===
+                        normalize(
+                            major
+                        )
+                    );
+                }
             );
     }
 
@@ -904,12 +1203,17 @@ function renderStudentsTable() {
 
         students =
             students.filter(
-                student =>
-                    normalize(
-                        student.year_level
-                    ) === normalize(
-                        year
-                    )
+                function (student) {
+
+                    return (
+                        normalize(
+                            student.year_level
+                        ) ===
+                        normalize(
+                            year
+                        )
+                    );
+                }
             );
     }
 
@@ -918,12 +1222,17 @@ function renderStudentsTable() {
 
         students =
             students.filter(
-                student =>
-                    normalize(
-                        student.status
-                    ) === normalize(
-                        status
-                    )
+                function (student) {
+
+                    return (
+                        normalize(
+                            student.status
+                        ) ===
+                        normalize(
+                            status
+                        )
+                    );
+                }
             );
     }
 
@@ -932,14 +1241,17 @@ function renderStudentsTable() {
 
         tbody.innerHTML = `
             <tr>
+
                 <td
                     colspan="9"
                     style="text-align:center;"
                 >
                     No students found.
                 </td>
+
             </tr>
         `;
+
 
         return;
     }
@@ -947,7 +1259,7 @@ function renderStudentsTable() {
 
     tbody.innerHTML =
         students.map(
-            student => {
+            function (student) {
 
                 const photo =
                     student.photo_url ||
@@ -972,12 +1284,14 @@ function renderStudentsTable() {
 
                         </td>
 
+
                         <td>
                             ${escapeHTML(
                                 student.student_number ||
                                 "N/A"
                             )}
                         </td>
+
 
                         <td>
                             ${escapeHTML(
@@ -986,12 +1300,14 @@ function renderStudentsTable() {
                             )}
                         </td>
 
+
                         <td>
                             ${escapeHTML(
                                 student.department ||
                                 "N/A"
                             )}
                         </td>
+
 
                         <td>
                             ${escapeHTML(
@@ -1000,12 +1316,14 @@ function renderStudentsTable() {
                             )}
                         </td>
 
+
                         <td>
                             ${escapeHTML(
                                 student.major ||
                                 "N/A"
                             )}
                         </td>
+
 
                         <td>
                             ${escapeHTML(
@@ -1014,27 +1332,34 @@ function renderStudentsTable() {
                             )}
                         </td>
 
+
                         <td>
+
                             <span class="status-badge">
+
                                 ${escapeHTML(
                                     student.status ||
                                     "Active"
                                 )}
+
                             </span>
+
                         </td>
+
 
                         <td>
 
                             <button
                                 class="btn-primary"
-                                onclick="openStudentModal('${student.id}')"
+                                onclick="openStudentModal('${escapeAttribute(student.id)}')"
                             >
                                 Edit
                             </button>
 
+
                             <button
                                 class="btn-secondary"
-                                onclick="deleteStudent('${student.id}')"
+                                onclick="deleteStudent('${escapeAttribute(student.id)}')"
                             >
                                 Delete
                             </button>
@@ -1082,7 +1407,9 @@ function populateSelect(
 ) {
 
     const select =
-        document.getElementById(id);
+        document.getElementById(
+            id
+        );
 
 
     if (!select) {
@@ -1095,13 +1422,11 @@ function populateSelect(
 
 
     select.innerHTML =
-        `<option value="">
-            ${firstOption}
-        </option>`;
+        `<option value="">${escapeHTML(firstOption)}</option>`;
 
 
     values.forEach(
-        value => {
+        function (value) {
 
             if (!value) {
                 return;
@@ -1130,7 +1455,9 @@ function populateSelect(
 
 
     if (
-        values.includes(current)
+        values.includes(
+            current
+        )
     ) {
 
         select.value =
@@ -1155,7 +1482,7 @@ function setupStudentFilters() {
 
 
     ids.forEach(
-        id => {
+        function (id) {
 
             const element =
                 document.getElementById(
@@ -1199,6 +1526,13 @@ async function openStudentModal(
 
             return;
         }
+
+
+        /*
+         * Populate options BEFORE setting values.
+         */
+
+        populateModalOptions();
 
 
         setValue(
@@ -1282,13 +1616,17 @@ async function openStudentModal(
         );
 
 
-        populateModalOptions();
+        const modal =
+            document.getElementById(
+                "studentModal"
+            );
 
 
-        document.getElementById(
-            "studentModal"
-        ).style.display =
-            "flex";
+        if (modal) {
+
+            modal.style.display =
+                "flex";
+        }
 
 
     } catch (error) {
@@ -1298,6 +1636,7 @@ async function openStudentModal(
             error
         );
 
+
         alert(
             "Unable to open student."
         );
@@ -1306,7 +1645,7 @@ async function openStudentModal(
 
 
 /* =========================================================
-   MODAL OPTIONS
+   STUDENT MODAL OPTIONS
 ========================================================= */
 
 function populateModalOptions() {
@@ -1505,8 +1844,10 @@ async function saveStudent() {
 
 
             alert(
+                result?.error?.message ||
                 "Failed to save student."
             );
+
 
             return;
         }
@@ -1522,7 +1863,6 @@ async function saveStudent() {
 
         await loadStudentsSection();
 
-
         await loadDashboard();
 
 
@@ -1532,6 +1872,7 @@ async function saveStudent() {
             "Save student error:",
             error
         );
+
 
         alert(
             "An error occurred while saving the student."
@@ -1579,8 +1920,10 @@ async function deleteStudent(
 
 
             alert(
+                result?.error?.message ||
                 "Unable to delete student."
             );
+
 
             return;
         }
@@ -1603,6 +1946,7 @@ async function deleteStudent(
             error
         );
 
+
         alert(
             "An error occurred while deleting the student."
         );
@@ -1618,8 +1962,14 @@ async function loadFacultySection() {
 
     try {
 
-        allFaculty =
+        const result =
             await loadFaculty();
+
+
+        allFaculty =
+            Array.isArray(result)
+                ? result
+                : [];
 
 
         renderFacultyTable();
@@ -1634,6 +1984,10 @@ async function loadFacultySection() {
     }
 }
 
+
+/* =========================================================
+   FACULTY TABLE
+========================================================= */
 
 function renderFacultyTable() {
 
@@ -1652,14 +2006,17 @@ function renderFacultyTable() {
 
         tbody.innerHTML = `
             <tr>
+
                 <td
                     colspan="6"
                     style="text-align:center;"
                 >
                     No faculty accounts found.
                 </td>
+
             </tr>
         `;
+
 
         return;
     }
@@ -1667,7 +2024,7 @@ function renderFacultyTable() {
 
     tbody.innerHTML =
         allFaculty.map(
-            faculty => {
+            function (faculty) {
 
                 return `
                     <tr>
@@ -1725,24 +2082,48 @@ async function loadAttendanceSection() {
 
     try {
 
+        /*
+         * Refresh students so attendance
+         * filter options are current.
+         */
+
+        const studentsResult =
+            await loadStudents();
+
+
+        if (
+            Array.isArray(
+                studentsResult
+            )
+        ) {
+
+            allStudents =
+                studentsResult;
+        }
+
+
         const result =
             await getAttendanceWithStudents();
 
 
-        if (result.error) {
+        if (
+            result &&
+            result.error
+        ) {
 
             console.error(
                 "Attendance error:",
                 result.error
             );
 
-            allAttendance =
-                [];
+
+            allAttendance = [];
+
 
         } else {
 
             allAttendance =
-                result.data ||
+                result?.data ||
                 [];
         }
 
@@ -1758,9 +2139,18 @@ async function loadAttendanceSection() {
             "Attendance section error:",
             error
         );
+
+
+        allAttendance = [];
+
+        renderAttendanceTable();
     }
 }
 
+
+/* =========================================================
+   ATTENDANCE TABLE
+========================================================= */
 
 function renderAttendanceTable() {
 
@@ -1829,7 +2219,7 @@ function renderAttendanceTable() {
 
     records =
         records.filter(
-            record => {
+            function (record) {
 
                 const student =
                     record.students ||
@@ -1947,14 +2337,17 @@ function renderAttendanceTable() {
 
         tbody.innerHTML = `
             <tr>
+
                 <td
                     colspan="9"
                     style="text-align:center;"
                 >
                     No attendance records found.
                 </td>
+
             </tr>
         `;
+
 
         return;
     }
@@ -1962,7 +2355,7 @@ function renderAttendanceTable() {
 
     tbody.innerHTML =
         records.map(
-            record => {
+            function (record) {
 
                 const student =
                     record.students ||
@@ -2041,7 +2434,7 @@ function renderAttendanceTable() {
 
 
 /* =========================================================
-   ATTENDANCE FILTERS
+   ATTENDANCE FILTER EVENTS
 ========================================================= */
 
 function setupAttendanceFilters() {
@@ -2057,7 +2450,7 @@ function setupAttendanceFilters() {
 
 
     ids.forEach(
-        id => {
+        function (id) {
 
             const element =
                 document.getElementById(
@@ -2084,6 +2477,10 @@ function setupAttendanceFilters() {
     );
 }
 
+
+/* =========================================================
+   POPULATE ATTENDANCE FILTERS
+========================================================= */
 
 function populateAttendanceFilters() {
 
@@ -2129,7 +2526,7 @@ function populateAttendanceFilters() {
 
 
 /* =========================================================
-   SETTINGS
+   SAVE ADMIN PROFILE
 ========================================================= */
 
 async function saveProfile() {
@@ -2152,9 +2549,7 @@ async function saveProfile() {
         }
 
 
-        if (
-            !currentAdminUser
-        ) {
+        if (!currentAdminUser) {
 
             alert(
                 "Administrator session is unavailable."
@@ -2170,39 +2565,22 @@ async function saveProfile() {
             );
 
 
-        const imageInput =
-            document.getElementById(
-                "adminImage"
-            );
-
-
         const updateData = {
+
             data: {
+
                 full_name:
                     name
             }
         };
 
 
-        if (
-            imageInput &&
-            imageInput.files &&
-            imageInput.files.length
-        ) {
-
-            /*
-             * Administrator profile image upload
-             * can be added once the dedicated
-             * admin image storage bucket is confirmed.
-             */
-        }
-
-
         const {
             error: updateError
-        } = await window.sb.auth.updateUser(
-            updateData
-        );
+        } =
+            await window.sb.auth.updateUser(
+                updateData
+            );
 
 
         if (updateError) {
@@ -2212,9 +2590,11 @@ async function saveProfile() {
                 updateError
             );
 
+
             alert(
                 updateError.message
             );
+
 
             return;
         }
@@ -2240,18 +2620,66 @@ async function saveProfile() {
                     passwordError
                 );
 
+
                 alert(
                     passwordError.message
                 );
+
 
                 return;
             }
         }
 
 
-        alert(
-            "Administrator profile updated successfully."
-        );
+        /*
+         * Update local display immediately.
+         */
+
+        currentAdminUser =
+            {
+                ...currentAdminUser,
+
+                user_metadata:
+                    {
+                        ...currentAdminUser
+                            .user_metadata,
+
+                        full_name:
+                            name
+                    }
+            };
+
+
+        try {
+
+            const storedAdmin =
+                JSON.parse(
+                    localStorage.getItem(
+                        "admin"
+                    ) ||
+                    "{}"
+                );
+
+
+            storedAdmin.full_name =
+                name;
+
+
+            localStorage.setItem(
+                "admin",
+                JSON.stringify(
+                    storedAdmin
+                )
+            );
+
+
+        } catch (error) {
+
+            console.warn(
+                "Unable to update local admin information.",
+                error
+            );
+        }
 
 
         setValue(
@@ -2260,7 +2688,12 @@ async function saveProfile() {
         );
 
 
-        await loadAdministratorProfile();
+        updateAdministratorUI();
+
+
+        alert(
+            "Administrator profile updated successfully."
+        );
 
 
     } catch (error) {
@@ -2269,6 +2702,7 @@ async function saveProfile() {
             "Save profile exception:",
             error
         );
+
 
         alert(
             "Unable to save administrator profile."
@@ -2326,10 +2760,36 @@ function setupImageUpload() {
                     imageInput.files[0];
 
 
-                uploadBox.querySelector(
-                    "p"
-                ).textContent =
-                    file.name;
+                const paragraph =
+                    uploadBox.querySelector(
+                        "p"
+                    );
+
+
+                if (paragraph) {
+
+                    paragraph.textContent =
+                        file.name;
+                }
+
+
+                /*
+                 * Local image preview.
+                 */
+
+                const preview =
+                    document.getElementById(
+                        "adminPreview"
+                    );
+
+
+                if (preview) {
+
+                    preview.src =
+                        URL.createObjectURL(
+                            file
+                        );
+                }
             }
         }
     );
@@ -2340,6 +2800,7 @@ function setupImageUpload() {
         function (event) {
 
             event.preventDefault();
+
 
             uploadBox.classList.add(
                 "dragging"
@@ -2365,6 +2826,7 @@ function setupImageUpload() {
 
             event.preventDefault();
 
+
             uploadBox.classList.remove(
                 "dragging"
             );
@@ -2379,14 +2841,55 @@ function setupImageUpload() {
                 files.length
             ) {
 
-                imageInput.files =
-                    files;
+                try {
+
+                    const transfer =
+                        new DataTransfer();
 
 
-                uploadBox.querySelector(
-                    "p"
-                ).textContent =
-                    files[0].name;
+                    transfer.items.add(
+                        files[0]
+                    );
+
+
+                    imageInput.files =
+                        transfer.files;
+
+                } catch (error) {
+
+                    console.warn(
+                        "Unable to assign dropped file.",
+                        error
+                    );
+                }
+
+
+                const paragraph =
+                    uploadBox.querySelector(
+                        "p"
+                    );
+
+
+                if (paragraph) {
+
+                    paragraph.textContent =
+                        files[0].name;
+                }
+
+
+                const preview =
+                    document.getElementById(
+                        "adminPreview"
+                    );
+
+
+                if (preview) {
+
+                    preview.src =
+                        URL.createObjectURL(
+                            files[0]
+                        );
+                }
             }
         }
     );
@@ -2414,6 +2917,7 @@ async function logout() {
 
         await logoutAdmin();
 
+
     } catch (error) {
 
         console.error(
@@ -2421,20 +2925,24 @@ async function logout() {
             error
         );
 
+
         localStorage.removeItem(
             "faculty"
         );
+
 
         localStorage.removeItem(
             "loggedIn"
         );
 
+
         localStorage.removeItem(
             "admin"
         );
 
+
         window.location.replace(
-            "Login.html"
+            "login.html"
         );
     }
 }
@@ -2460,7 +2968,7 @@ function showDashboardError(
 
 
     containers.forEach(
-        id => {
+        function (id) {
 
             const element =
                 document.getElementById(
@@ -2482,7 +2990,7 @@ function showDashboardError(
 
 
 /* =========================================================
-   HELPER FUNCTIONS
+   HELPER - SET TEXT
 ========================================================= */
 
 function setText(
@@ -2500,9 +3008,20 @@ function setText(
 
         element.textContent =
             value ?? "0";
+
+    } else {
+
+        console.warn(
+            "Dashboard element not found:",
+            id
+        );
     }
 }
 
+
+/* =========================================================
+   HELPER - SET VALUE
+========================================================= */
 
 function setValue(
     id,
@@ -2523,6 +3042,10 @@ function setValue(
 }
 
 
+/* =========================================================
+   HELPER - GET VALUE
+========================================================= */
+
 function getValue(
     id
 ) {
@@ -2534,10 +3057,16 @@ function getValue(
 
 
     return element
-        ? element.value.trim()
+        ? String(
+            element.value || ""
+        ).trim()
         : "";
 }
 
+
+/* =========================================================
+   HELPER - NORMALIZE
+========================================================= */
 
 function normalize(
     value
@@ -2551,40 +3080,64 @@ function normalize(
 }
 
 
+/* =========================================================
+   HELPER - UNIQUE VALUES
+========================================================= */
+
 function uniqueValues(
     array,
     property
 ) {
 
+    if (!Array.isArray(array)) {
+        return [];
+    }
+
+
     return [
         ...new Set(
             array
                 .map(
-                    item =>
-                        item?.[property]
+                    function (item) {
+
+                        return item?.[
+                            property
+                        ];
+                    }
                 )
                 .filter(
-                    value =>
-                        value !== null &&
-                        value !== undefined &&
-                        String(value).trim() !== ""
+                    function (value) {
+
+                        return (
+                            value !== null &&
+                            value !== undefined &&
+                            String(value)
+                                .trim() !== ""
+                        );
+                    }
                 )
                 .map(
-                    value =>
-                        String(value).trim()
+                    function (value) {
+
+                        return String(
+                            value
+                        ).trim();
+                    }
                 )
         )
     ].sort(
-        (a, b) =>
-            a.localeCompare(
+        function (a, b) {
+
+            return a.localeCompare(
                 b
-            )
+            );
+        }
     );
 }
 
 
 /* =========================================================
-   DATE / TIME FORMAT
+   FORMAT TIME
 ========================================================= */
 
 function formatTime(
@@ -2603,25 +3156,38 @@ function formatTime(
             {
                 timeZone:
                     "Asia/Manila",
+
                 hour:
                     "2-digit",
+
                 minute:
                     "2-digit",
+
                 second:
                     "2-digit",
+
                 hour12:
                     true
             }
         ).format(
-            new Date(value)
+            new Date(
+                value
+            )
         );
+
 
     } catch (error) {
 
-        return value;
+        return String(
+            value
+        );
     }
 }
 
+
+/* =========================================================
+   FORMAT DATE AND TIME
+========================================================= */
 
 function formatDateTime(
     value
@@ -2639,26 +3205,37 @@ function formatDateTime(
             {
                 timeZone:
                     "Asia/Manila",
+
                 year:
                     "numeric",
+
                 month:
                     "short",
+
                 day:
                     "2-digit",
+
                 hour:
                     "2-digit",
+
                 minute:
                     "2-digit",
+
                 hour12:
                     true
             }
         ).format(
-            new Date(value)
+            new Date(
+                value
+            )
         );
+
 
     } catch (error) {
 
-        return value;
+        return String(
+            value
+        );
     }
 }
 
@@ -2714,41 +3291,62 @@ function escapeAttribute(
 window.showSection =
     showSection;
 
+
 window.openStudentModal =
     openStudentModal;
+
 
 window.closeStudentModal =
     closeStudentModal;
 
+
 window.saveStudent =
     saveStudent;
+
 
 window.deleteStudent =
     deleteStudent;
 
+
 window.saveProfile =
     saveProfile;
+
 
 window.logout =
     logout;
 
+
 window.loadDashboard =
     loadDashboard;
+
 
 window.loadStudentsSection =
     loadStudentsSection;
 
+
 window.loadFacultySection =
     loadFacultySection;
+
 
 window.loadAttendanceSection =
     loadAttendanceSection;
 
+
 window.renderStudentsTable =
     renderStudentsTable;
 
+
 window.renderAttendanceTable =
     renderAttendanceTable;
+
+
+window.updateDashboardStatistics =
+    updateDashboardStatistics;
+
+
+/* =========================================================
+   SUCCESS MESSAGE
+========================================================= */
 
 console.log(
     "AMA Admin JavaScript loaded successfully."
