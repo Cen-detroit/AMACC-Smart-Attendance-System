@@ -1,110 +1,1232 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
 <title>AMACC Admin Login</title>
+
+
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
+
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+>
+
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
-body{min-height:100vh;display:flex;justify-content:center;align-items:center;overflow:hidden;background:linear-gradient(135deg,rgba(91,15,15,.96),rgba(145,20,20,.96));position:relative}
-.circle1{position:absolute;width:380px;height:380px;background:rgba(255,255,255,.08);border-radius:50%;top:-120px;left:-120px;filter:blur(5px)}
-.circle2{position:absolute;width:320px;height:320px;background:rgba(255,255,255,.08);border-radius:50%;bottom:-100px;right:-100px;filter:blur(5px)}
-.login-card{width:420px;border-radius:28px;overflow:hidden;background:rgba(255,255,255,.12);backdrop-filter:blur(12px);box-shadow:0 10px 40px rgba(0,0,0,.25);position:relative;z-index:10;animation:fadeIn .7s ease}
-.top-section{padding:35px 30px 25px;text-align:center;background:rgba(255,255,255,.08)}
-.logo-circle{width:120px;height:120px;background:white;border-radius:50%;margin:0 auto 20px;display:flex;justify-content:center;align-items:center;box-shadow:0 6px 18px rgba(0,0,0,.25)}
-.logo-circle img{width:75px;object-fit:contain}
-.top-section h1{color:white;font-size:24px;margin-bottom:8px}
-.top-section p{color:#f3f4f6;font-size:14px;letter-spacing:1px}
-.form-section{background:#f9fafb;padding:35px;border-top-left-radius:35px;border-top-right-radius:35px}
-.form-section h2{text-align:center;color:#7b1113;margin-bottom:25px;font-size:38px}
-.input-group{margin-bottom:20px}
-.input-group label{display:block;margin-bottom:8px;font-weight:bold;color:#374151;font-size:14px}
-.input-group input{width:100%;padding:15px;border-radius:14px;border:1px solid #d1d5db;outline:none;background:#f3f4f6;font-size:15px;transition:.3s}
-.input-group input:focus{border-color:#7b1113;box-shadow:0 0 0 4px rgba(123,17,19,.15);background:white}
-.login-btn{width:100%;padding:15px;border:none;border-radius:15px;background:linear-gradient(135deg,#8b0000,#c1121f);color:white;font-size:17px;font-weight:bold;cursor:pointer;transition:.3s;margin-top:10px}
-.login-btn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(139,0,0,.3)}
-.login-btn:disabled{opacity:.7;cursor:not-allowed;transform:none}
-.error-message{margin-top:18px;text-align:center;color:#dc2626;font-size:14px;display:none}
-.footer{margin-top:20px;text-align:center;color:#6b7280;font-size:13px}
-@keyframes fadeIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@media(max-width:500px){.login-card{width:92%}.form-section{padding:25px}.form-section h2{font-size:30px}}
+
+/* =========================================================
+   ROOT
+========================================================= */
+
+:root{
+
+    --maroon:#8b000f;
+    --maroon-deep:#6d000c;
+    --maroon-bright:#c1121f;
+
+    --gold:#ffd54f;
+
+    --ink:#1e293b;
+    --muted:#64748b;
+    --line:#e2e8f0;
+
+    --success:#16a34a;
+    --danger:#b91c1c;
+    --info:#2563eb;
+
+    --radius-sm:4px;
+    --radius-md:6px;
+}
+
+
+/* =========================================================
+   GENERAL
+========================================================= */
+
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
+    font-family:
+        'IBM Plex Sans',
+        Arial,
+        Helvetica,
+        sans-serif;
+}
+
+
+label,
+.subtitle,
+.eyebrow,
+.form-eyebrow,
+.toggle-password,
+.message,
+.footer{
+
+    font-family:
+        'IBM Plex Mono',
+        'Courier New',
+        monospace;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+body{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+    align-items:center;
+
+    position:relative;
+
+    overflow:auto;
+
+    padding:20px;
+
+    background:
+
+        linear-gradient(
+            160deg,
+            rgba(109,0,12,.97),
+            rgba(139,0,15,.95) 55%,
+            rgba(90,0,10,.98)
+        );
+}
+
+
+/* =========================================================
+   GRID BACKGROUND
+========================================================= */
+
+body::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+        linear-gradient(
+            rgba(255,255,255,.035) 1px,
+            transparent 1px
+        ),
+
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,.035) 1px,
+            transparent 1px
+        );
+
+    background-size:
+        36px 36px;
+
+    pointer-events:none;
+}
+
+
+body::after{
+
+    content:"";
+
+    position:absolute;
+
+    width:480px;
+    height:480px;
+
+    top:-180px;
+    right:-160px;
+
+    background:
+        rgba(255,213,79,.05);
+
+    border-radius:50%;
+
+    filter:blur(30px);
+
+    pointer-events:none;
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container{
+
+    width:100%;
+
+    max-width:440px;
+
+    position:relative;
+
+    z-index:2;
+}
+
+
+/* =========================================================
+   LOGIN CARD
+========================================================= */
+
+.login-card{
+
+    overflow:hidden;
+
+    background:
+        rgba(255,255,255,.07);
+
+    backdrop-filter:
+        blur(20px);
+
+    border:
+        1px solid
+        rgba(255,255,255,.16);
+
+    border-top:
+        2px solid
+        var(--gold);
+
+    border-radius:
+        var(--radius-md);
+
+    box-shadow:
+        0 20px 50px
+        rgba(0,0,0,.35);
+
+    animation:
+        fadeIn .5s ease;
+}
+
+
+/* =========================================================
+   TOP SECTION
+========================================================= */
+
+.top-section{
+
+    padding:
+        34px
+        28px
+        22px;
+
+    text-align:center;
+}
+
+
+.eyebrow{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    margin-bottom:18px;
+
+    font-size:10.5px;
+
+    font-weight:600;
+
+    letter-spacing:2px;
+
+    text-transform:uppercase;
+
+    color:
+        var(--gold);
+}
+
+
+.eyebrow .dot{
+
+    width:6px;
+    height:6px;
+
+    border-radius:50%;
+
+    background:
+        var(--success);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(22,163,74,.2);
+
+    animation:
+        pulse 2s infinite;
+}
+
+
+@keyframes pulse{
+
+    0%,
+    100%{
+        opacity:1;
+    }
+
+    50%{
+        opacity:.4;
+    }
+}
+
+
+/* =========================================================
+   LOGO
+========================================================= */
+
+.logo-box{
+
+    width:112px;
+    height:112px;
+
+    margin:
+        0 auto
+        18px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    background:white;
+
+    border-radius:
+        var(--radius-md);
+
+    border:
+        1px solid
+        rgba(0,0,0,.08);
+
+    box-shadow:
+        0 8px 24px
+        rgba(0,0,0,.3);
+}
+
+
+.logo-box img{
+
+    width:78px;
+
+    object-fit:contain;
+}
+
+
+/* =========================================================
+   HEADER TEXT
+========================================================= */
+
+.top-section h1{
+
+    margin-bottom:8px;
+
+    color:white;
+
+    font-size:24px;
+
+    font-weight:700;
+
+    letter-spacing:-.3px;
+}
+
+
+.subtitle{
+
+    color:
+        rgba(255,255,255,.65);
+
+    font-size:11px;
+
+    letter-spacing:2px;
+}
+
+
+/* =========================================================
+   FORM SECTION
+========================================================= */
+
+.form-section{
+
+    background:#ffffff;
+
+    padding:
+        32px
+        30px
+        30px;
+
+    border-top:
+        1px solid
+        var(--line);
+}
+
+
+.form-section h2{
+
+    text-align:center;
+
+    margin-bottom:6px;
+
+    color:
+        var(--ink);
+
+    font-size:20px;
+
+    font-weight:700;
+
+    text-transform:uppercase;
+
+    letter-spacing:1px;
+}
+
+
+.form-eyebrow{
+
+    margin-bottom:22px;
+
+    padding-bottom:18px;
+
+    border-bottom:
+        1px solid
+        var(--line);
+
+    text-align:center;
+
+    color:
+        var(--muted);
+
+    font-size:11px;
+
+    letter-spacing:1px;
+}
+
+
+/* =========================================================
+   INPUTS
+========================================================= */
+
+.input-group{
+
+    margin-bottom:16px;
+}
+
+
+.input-group label{
+
+    display:block;
+
+    margin-bottom:7px;
+
+    color:
+        var(--maroon);
+
+    font-size:10.5px;
+
+    font-weight:600;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+}
+
+
+.input-group input{
+
+    width:100%;
+
+    padding:
+        13px
+        14px;
+
+    border:
+        1px solid
+        var(--line);
+
+    border-radius:
+        var(--radius-sm);
+
+    outline:none;
+
+    background:
+        #f8fafc;
+
+    color:
+        var(--ink);
+
+    font-size:14px;
+
+    transition:
+        .15s ease;
+}
+
+
+.input-group input::placeholder{
+
+    color:#a3adba;
+}
+
+
+.input-group input:focus{
+
+    background:white;
+
+    border-color:
+        var(--maroon);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(139,0,15,.1);
+}
+
+
+/* =========================================================
+   PASSWORD
+========================================================= */
+
+.password-field{
+
+    position:relative;
+}
+
+
+.password-field input{
+
+    padding-right:65px;
+}
+
+
+.toggle-password{
+
+    position:absolute;
+
+    right:14px;
+
+    top:50%;
+
+    transform:
+        translateY(-50%);
+
+    padding:
+        4px 8px;
+
+    border:
+        1px solid
+        rgba(139,0,15,.2);
+
+    border-radius:3px;
+
+    background:
+        #fdf0f1;
+
+    color:
+        var(--maroon);
+
+    cursor:pointer;
+
+    user-select:none;
+
+    font-size:10.5px;
+
+    font-weight:700;
+
+    letter-spacing:.5px;
+
+    text-transform:uppercase;
+}
+
+
+/* =========================================================
+   LOGIN BUTTON
+========================================================= */
+
+.login-btn{
+
+    width:100%;
+
+    margin-top:8px;
+
+    padding:14px;
+
+    border:
+        1px solid
+        var(--maroon-deep);
+
+    border-radius:
+        var(--radius-sm);
+
+    background:
+        var(--maroon);
+
+    color:white;
+
+    cursor:pointer;
+
+    font-family:
+        'IBM Plex Mono',
+        monospace;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    letter-spacing:1px;
+
+    text-transform:uppercase;
+
+    transition:
+        .15s ease;
+}
+
+
+.login-btn:hover{
+
+    background:
+        var(--maroon-bright);
+}
+
+
+.login-btn:active{
+
+    transform:
+        translateY(1px);
+}
+
+
+.login-btn:disabled{
+
+    opacity:.55;
+
+    cursor:not-allowed;
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.error-message{
+
+    display:none;
+
+    margin-top:16px;
+
+    text-align:center;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    line-height:1.5;
+
+    color:
+        var(--danger);
+}
+
+
+.message-info{
+
+    display:block;
+
+    color:
+        var(--info);
+}
+
+
+.message-success{
+
+    display:block;
+
+    color:
+        var(--success);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer{
+
+    margin-top:22px;
+
+    padding-top:18px;
+
+    border-top:
+        1px solid
+        var(--line);
+
+    text-align:center;
+
+    color:
+        var(--muted);
+
+    font-size:10.5px;
+
+    letter-spacing:.4px;
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:
+            translateY(16px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+            translateY(0);
+    }
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media(max-width:500px){
+
+    .form-section{
+
+        padding:
+            26px
+            22px;
+    }
+
+
+    .top-section h1{
+
+        font-size:21px;
+    }
+
+
+    .form-section h2{
+
+        font-size:18px;
+    }
+}
+
 </style>
+
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script src="js/supabase.js"></script>
+
+
 </head>
+
+
 <body>
-<div class="circle1"></div>
-<div class="circle2"></div>
-<div class="login-card">
-<div class="top-section">
-<div class="logo-circle"><img src="images/AMA Logo.png" alt="AMA Logo"></div>
-<h1>AMACC Admin Control Center</h1>
-<p>ADMINISTRATOR LOGIN SYSTEM</p>
+
+
+<div class="container">
+
+
+    <div class="login-card">
+
+
+        <!-- HEADER -->
+
+        <div class="top-section">
+
+
+            <div class="eyebrow">
+
+                <span class="dot"></span>
+
+                SECURE ACCESS
+
+            </div>
+
+
+            <div class="logo-box">
+
+                <img
+                    src="images/AMA Logo.png"
+                    alt="AMA Logo"
+                >
+
+            </div>
+
+
+            <h1>
+
+                AMACC Admin Portal
+
+            </h1>
+
+
+            <p class="subtitle">
+
+                ADMINISTRATOR DASHBOARD LOGIN SYSTEM
+
+            </p>
+
+
+        </div>
+
+
+        <!-- LOGIN FORM -->
+
+        <form
+            class="form-section"
+            id="loginForm"
+        >
+
+
+            <h2>
+
+                Admin Login
+
+            </h2>
+
+
+            <div class="form-eyebrow">
+
+                // authenticate to continue
+
+            </div>
+
+
+            <div class="input-group">
+
+
+                <label for="email">
+
+                    Email Address
+
+                </label>
+
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter Admin Email"
+                    autocomplete="username"
+                    required
+                >
+
+
+            </div>
+
+
+            <div class="input-group">
+
+
+                <label for="password">
+
+                    Password
+
+                </label>
+
+
+                <div class="password-field">
+
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Enter Password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+
+                    <span
+                        class="toggle-password"
+                        id="passwordToggle"
+                    >
+
+                        Show
+
+                    </span>
+
+
+                </div>
+
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-btn"
+                id="loginBtn"
+            >
+
+                Login
+
+            </button>
+
+
+            <div
+                class="error-message"
+                id="errorMessage"
+                role="alert"
+            ></div>
+
+
+            <div class="footer">
+
+                © 2026 AMACC System Control Center
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+
 </div>
-<form class="form-section" id="loginForm">
-<h2>Admin Login</h2>
-<div class="input-group">
-<label for="email">Email</label>
-<input type="email" id="email" name="email" placeholder="Enter Admin Email" autocomplete="username" required>
-</div>
-<div class="input-group">
-<label for="password">Password</label>
-<input type="password" id="password" name="password" placeholder="Enter Password" autocomplete="current-password" required>
-</div>
-<button type="submit" class="login-btn" id="loginBtn">Login</button>
-<div class="error-message" id="errorMessage" role="alert">❌ Invalid Email or Password</div>
-<div class="footer">© 2026 AMACC System Control Center</div>
-</form>
-</div>
+
+
 <script>
-const loginForm=document.getElementById("loginForm");
-const errorMessage=document.getElementById("errorMessage");
-const loginBtn=document.getElementById("loginBtn");
 
-loginForm.addEventListener("submit",async e=>{
-e.preventDefault();
-const email=document.getElementById("email").value.trim();
-const password=document.getElementById("password").value;
-errorMessage.style.display="none";
-loginBtn.disabled=true;
-loginBtn.textContent="Logging in...";
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
-try{
-const result=await authenticateAdmin(email,password);
-if(!result.success){
-errorMessage.textContent="❌ "+result.message;
-errorMessage.style.display="block";
-loginBtn.disabled=false;
-loginBtn.textContent="Login";
-return;
-}
+const loginForm =
+    document.getElementById(
+        "loginForm"
+    );
 
-const {data:{user},error:userError}=await sb.auth.getUser();
-if(userError||!user){
-throw new Error("Unable to verify administrator account.");
-}
 
-const {data:admin,error:adminError}=await sb.from("admin_accounts").select("*").eq("auth_user_id",user.id).maybeSingle();
+const errorMessage =
+    document.getElementById(
+        "errorMessage"
+    );
 
-if(adminError||!admin){
-await sb.auth.signOut();
-errorMessage.textContent="❌ This account is not registered as an administrator.";
-errorMessage.style.display="block";
-loginBtn.disabled=false;
-loginBtn.textContent="Login";
-return;
-}
 
-localStorage.setItem("admin",JSON.stringify(admin));
-window.location.href="Admin-Dashboard.html";
-}catch(error){
-console.error("Admin login error:",error);
-errorMessage.textContent="❌ "+(error.message||"Unable to login.");
-errorMessage.style.display="block";
-loginBtn.disabled=false;
-loginBtn.textContent="Login";
-}
-});
+const loginBtn =
+    document.getElementById(
+        "loginBtn"
+    );
+
+
+const passwordInput =
+    document.getElementById(
+        "password"
+    );
+
+
+const passwordToggle =
+    document.getElementById(
+        "passwordToggle"
+    );
+
+
+/* =========================================================
+   PASSWORD SHOW / HIDE
+========================================================= */
+
+passwordToggle.addEventListener(
+    "click",
+    function(){
+
+        if(
+            passwordInput.type ===
+            "password"
+        ){
+
+            passwordInput.type =
+                "text";
+
+            passwordToggle.textContent =
+                "Hide";
+
+        }
+        else{
+
+            passwordInput.type =
+                "password";
+
+            passwordToggle.textContent =
+                "Show";
+        }
+    }
+);
+
+
+/* =========================================================
+   ADMIN LOGIN
+========================================================= */
+
+loginForm.addEventListener(
+    "submit",
+    async function(e){
+
+        e.preventDefault();
+
+
+        const email =
+            document
+                .getElementById(
+                    "email"
+                )
+                .value
+                .trim();
+
+
+        const password =
+            passwordInput.value;
+
+
+        errorMessage.style.display =
+            "block";
+
+
+        errorMessage.className =
+            "error-message message-info";
+
+
+        errorMessage.textContent =
+            "Signing in...";
+
+
+        loginBtn.disabled =
+            true;
+
+
+        loginBtn.textContent =
+            "Logging in...";
+
+
+        try{
+
+
+            /* =============================================
+               CHECK SUPABASE
+            ============================================= */
+
+            if(
+                !window.sb ||
+                !window.sb.auth
+            ){
+
+                throw new Error(
+                    "Supabase client is not available."
+                );
+            }
+
+
+            /* =============================================
+               LOGIN WITH SUPABASE AUTH
+            ============================================= */
+
+            const {
+                data,
+                error
+            } =
+                await window.sb.auth
+                    .signInWithPassword(
+                        {
+                            email:
+                                email,
+
+                            password:
+                                password
+                        }
+                    );
+
+
+            if(error){
+
+                throw error;
+            }
+
+
+            if(
+                !data ||
+                !data.user
+            ){
+
+                throw new Error(
+                    "Unable to verify account."
+                );
+            }
+
+
+            /* =============================================
+               CHECK ADMIN ACCOUNT
+            ============================================= */
+
+            const {
+                data:admin,
+                error:adminError
+            } =
+                await window.sb
+
+                    .from(
+                        "admin_accounts"
+                    )
+
+                    .select("*")
+
+                    .eq(
+                        "auth_user_id",
+                        data.user.id
+                    )
+
+                    .maybeSingle();
+
+
+            if(adminError){
+
+                throw adminError;
+            }
+
+
+            if(!admin){
+
+                await window.sb
+                    .auth
+                    .signOut();
+
+
+                throw new Error(
+                    "This account is not registered as an administrator."
+                );
+            }
+
+
+            /* =============================================
+               SAVE ADMIN SESSION
+            ============================================= */
+
+            localStorage.setItem(
+                "loggedIn",
+                "true"
+            );
+
+
+            localStorage.setItem(
+                "admin",
+                JSON.stringify(
+                    admin
+                )
+            );
+
+
+            /* =============================================
+               SUCCESS
+            ============================================= */
+
+            errorMessage.className =
+                "error-message message-success";
+
+
+            errorMessage.textContent =
+                "Login successful. Opening Administrator Dashboard...";
+
+
+            setTimeout(
+                function(){
+
+                    window.location.href =
+                        "Admin-Dashboard.html";
+
+                },
+                700
+            );
+
+
+        }
+        catch(error){
+
+
+            console.error(
+                "Admin login error:",
+                error
+            );
+
+
+            let message =
+                error.message ||
+                "Unable to login.";
+
+
+            if(
+                message
+                    .toLowerCase()
+                    .includes(
+                        "invalid login credentials"
+                    )
+            ){
+
+                message =
+                    "Invalid email or password.";
+            }
+
+
+            errorMessage.className =
+                "error-message";
+
+
+            errorMessage.style.display =
+                "block";
+
+
+            errorMessage.textContent =
+                "❌ " +
+                message;
+
+        }
+        finally{
+
+
+            loginBtn.disabled =
+                false;
+
+
+            loginBtn.textContent =
+                "Login";
+        }
+
+    }
+);
+
 </script>
+
+
 </body>
+
 </html>
